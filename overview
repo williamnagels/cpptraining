@@ -1,0 +1,43 @@
+0/move semantics
+	-> ownership/lifetime of a resource;
+		--> std::unique_ptr
+		--> std::shared_ptr
+		--> std::string vs std::string_view
+		RAII: managing the heap by using the stack
+		move semantics; transfer of ownership
+
+	-> perfect forwarding
+
+1/ Value semantics:
+	lifetime 
+
+	-> std::any ('type safe' void*)
+	-> std::optional(makes intent more obvious than e.g. magic values)
+	-> std::variant 
+
+	spectrum of reference & value semantics; int <--> std::shared_ptr
+	strategy design pattern: templated/function object allocator iso pimpl allocator
+
+2/ Iterators, ranges(c++20) and algorithms:
+	The std lib contains many tried and proven algorithms that operate on these containers using iterators.
+		-> key differences between container types(std::array, std::vector, std::map, ...)
+		-> families of algorithms
+			---> queries         (find, sample)
+			---> permutations    (rotate, reverse)
+			---> value modifiers (generate, fill)
+			---> movers 	     (copy, move)
+
+	special purpose iterators; e.g. push back iterator
+
+3/ Strong types:
+	cleaner/safer api design by wrapping literals with user defined types and implementing user defined literals.
+	
+	benefits: catching code errors (implicit conversion, wrong parameter position), automatic valid conversion between different units
+
+4/ Multithreading:
+	c++11 memory model; synchronizing writes:
+		--> std::atomic
+		--> waking up threads using std::condition_variable: producer & consumer
+			--> std::future; std::promise; std::async; std::packaged_task
+		--> std::mutex; std::lock
+		--> std::shared_mutex (c++17): multiple readers can take read lock
