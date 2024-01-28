@@ -1,113 +1,84 @@
 #include <global.h>
-
-
 namespace
 {
-
-//Convert container "input" to  container "output" using an algorithm from the stdlib
-//you can use an additional temporary container if needed.
-//filter out all uneven numbers in the process
-//https://en.cppreference.com/w/cpp/algorithm
-void test_1()
-{
-  std::vector<int> input = {4,5,6,8,9};
-
-  std::vector<std::string> output;
-
-  ASSERT(output[1]  == "6");
-  ASSERT(std::size(input)  == 5);
+std::size_t allocationCount = 0;
+std::size_t deallocationCount = 0;
+}
+//uncomment these when working on this excercise to track heap allocations
+//comment when done, dont want other tests to print something whenever
+//they allocate, put asserts in comment again aswell when done.
+//will overide weak symbol new with a global sombol here, this is binary wide
+/*void* operator new(std::size_t size) noexcept(false) {
+    ++allocationCount;
+    void* ptr = std::malloc(size);
+    std::cout << "HEAP allocating " << size << " bytes. Total allocations: " << allocationCount << std::endl;
+    return ptr;
 }
 
-// skip this exercise for now, come back to it after you completed ex5.cpp
-//create a zip iterator to iterate over 2 containers and returns a pair of 2 iterators, each iterator point to an element in the container.
-
-/*using select_access_type_for = std::conditional_t<
-    std::is_same_v<Iter, std::vector<bool>::iterator> ||
-    std::is_same_v<Iter, std::vector<bool>::const_iterator>,
-    typename std::iterator_traits<Iter>::value_type,
-    typename std::iterator_traits<Iter>::reference
->;
-template <typename T>
-using select_iterator_for = std::conditional_t<
-    std::is_const_v<std::remove_reference_t<T>>, 
-    typename std::decay_t<T>::const_iterator,
-    typename std::decay_t<T>::iterator>;
-template <typename Iter1, typename Iter2>
-class zip_iterator
-{
-public:
-    using value_type = std::pair<select_access_type_for<Iter1>, select_access_type_for<Iter2>>;
-
-    zip_iterator() = delete;
-
-    zip_iterator(Iter1 iter_1_begin, Iter2 iter_2_begin)
-    {
-    }
-
-    auto operator++() -> zip_iterator& {
-    }
-
-    auto operator++(int) -> zip_iterator {
-    }
-
-    auto operator!=(zip_iterator const & other) {
-    }
-
-    auto operator==(zip_iterator const & other) {
-    }
-
-    auto operator*() -> value_type {
-    }
-
-private:
-    Iter1 m_iter_1_begin;
-    Iter2 m_iter_2_begin;
-};
-template <typename T, typename U>
-class zipper
-{
-public:
-    using Iter1 = select_iterator_for<T>;
-    using Iter2 = select_iterator_for<U>;
-
-    using zip_type = zip_iterator<Iter1, Iter2>;
-
-    template <typename V, typename W>
-    explicit zipper(V && a, W && b)
-    {
-    }
-    auto begin() -> zip_type {
-    }
-    auto end() -> zip_type {
-    }
-
-private:
-    T m_a;
-    U m_b;
-};
-template <typename T, typename U>
-auto zip(T && t, U && u) {
-    return zipper<T, U>{std::forward<T>(t), std::forward<U>(u)};
+void operator delete(void* ptr) noexcept {
+    ++deallocationCount;
+    std::free(ptr);
+    std::cout << "HEAP deallocating " << std::endl;
 }*/
 
+namespace{
 
-void test_2()
-{
-    const std::vector<std::string> keys{ {"two: ", "five: ", "ten: ", "forty: "} };
-    const std::vector<int> values{ {2, 5, 10, 40} };
-    std::vector<std::string> c;
-    /*for (auto [x, y] : zip(keys, values)) {
-        c.push_back(x + std::to_string(y));
+template <typename T>
+class SimplePoolAllocator {
+public:
+    using value_type = T;
+    using storage_type = std::unique_ptr<T>;
+    const std::size_t MAX=10;
+    
+    //init pool
+    SimplePoolAllocator() {
+    }
+    //getlement from pool
+    T* allocate(std::size_t n) noexcept {
+	    return nullptr;
     }
     
-    ASSERT(output[1]  == "five: 5");
-    */
+    //add element back to pool
+    void deallocate(T* p, std::size_t n) noexcept {
+    }
 
-} 
+private:
+    std::vector<storage_type> m_pool;
+};
+struct X{
+    std::array<uint64_t, 100> data;
+};
+
+template <typename ListType>
+void doTest() {
+    ListType myList;
+    //pull all memory from pool to myList, size of pool = 10
+    for (int i = 0; i<10; i++){
+        myList.push_back(typename ListType::value_type{});
+    }
+    myList.clear(); //release memory back from myList to pool
+    //pull all memory from pool to myList, size of pool = 10
+    for (int i = 0; i<10; i++){
+        myList.push_back(typename ListType::value_type{});
+    }
 }
- 
+
+//uncomment asserts below and make them succeed.
+//20 allocations when working with default std::list template arguments
+//should be 11 with pool allocator. Can be 10 if you want (since size -10- is known already)
+void test_1() {
+    ASSERT(allocationCount == 0);
+    doTest<std::list<int>>();
+    //ASSERT(allocationCount == 20);
+    //ASSERT(deallocationCount == 20);
+    //uncommenting the line below will crash until SimplePoolAllocator has been implemented
+    //it returns nullptr right now, instead of actual usable memory when allocating.
+    //doTest<std::list<X, SimplePoolAllocator<X>>>();
+    //ASSERT(allocationCount == 31); //11 = 1 + 10
+    //ASSERT(deallocationCount == 31); //11 = 1 + 10
+}
+}
 void cont_ex1()
 {
   test_1();
-  test_2();
 }

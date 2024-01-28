@@ -19,10 +19,12 @@ void test_1()
   MyAny i2 = 1;
   MyAny s1 = std::string("string");
   MyAny s2 = std::string("string");
+  MyAny s3 = std::string("string2");
   ASSERT(i1 == i2);
   ASSERT(s1 == s2);
-  ASSERT(i1 == s1);
-  ASSERT(i2 == s2);
+  ASSERT(s1 != s3);
+  ASSERT(i1 != s1);
+  ASSERT(i2 != s2);
 */
 }
 
