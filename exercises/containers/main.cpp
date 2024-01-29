@@ -7,6 +7,7 @@ void cont_ex4();
 void cont_ex5();
 void cont_ex6();
 void cont_ex7();
+void cont_ex8();
 int main()
 {
   cont_ex1();
@@ -16,5 +17,6 @@ int main()
   cont_ex5();
   cont_ex6();
   cont_ex7();
+  cont_ex8();
   return 0;
 }

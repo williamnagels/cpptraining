@@ -43,7 +43,8 @@ set(CONT_SOURCES
 	containers/ex4.cpp
 	containers/ex5.cpp
 	containers/ex6.cpp
-	containers/ex7.cpp)
+	containers/ex7.cpp
+	containers/ex8.cpp)
 add_executable(containers ${COMMON_SOURCES} ${CONT_SOURCES})
 
 set(CONC_SOURCES 
