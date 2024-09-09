@@ -2,20 +2,24 @@
 
 namespace
 {
-struct Friend {
+struct Friend 
+{
     std::string name;
     std::string dietaryPreference;
 };
-// Predicate for stable_partition
+
+// Predicate used to split the lists
 bool isVegetarian(const Friend& friendObj) {
-    return true;
+    return true; //TODO: Fix predicate
 }
 
 void test_1()
 {
-    // Split the list of friends in 2 parts, Vegetarian and non vegetarian. Do not create new lists.  
-    // resuffle the list of friends so that all vegetarians are at the beginning of the list
-    // dont change the order of friend objects (e.g: Alice should remain positioned before David)
+    // Reorder the list of friends in 2 parts. Vegetarians and non vegetarians. Do not create new lists,
+    // re-order the existing friends list in place.
+    // Reorder the list of friends so that all vegetarians are at the beginning of the list
+    // do not change the order of friend instances (After reordering Alice is still before David in the list)
+    //
     // There is one algorithm that can do this.
     std::vector<Friend> friends = {
         {"Alice", "Vegetarian"},
@@ -26,10 +30,11 @@ void test_1()
         {"Frank", "Pescatarian"}
     };
 
-    //iterator to the last vegetarian.
+    //TODO:Fix this - Iterator to the last vegetarian, use an algorithm with
+    //the predicate.
     auto it= std::begin(friends);
-
-    //uncomment these asserts
+    
+    //TODO: Uncomment these asserts
     //ASSERT(std::distance(std::begin(friends), it) == 2);
     //ASSERT(std::distance(it, std::end(friends)) == 4);
 }
