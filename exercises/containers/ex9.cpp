@@ -4,15 +4,14 @@ namespace
 {
 void test_1()
 {
-    // Creating a vector of words
     std::vector<std::string> words = {"apple", "bananaman", "kiwi", "grape"};
-
-    auto longest = std::begin(words); //find the longest word in the set of words
-
-    //uncomment the assert
-    //ASSERT(*longest == "bananaman");
-
-    // print the full vector to std::cout using std::ostream_iterator
+    //TODO: Update the algorithm so that the iterator 'it' points to the longest word (bananaman)
+    auto it = std::begin(words);
+    
+    //TODO: Uncomment the assert
+    //ASSERT(*it == "bananaman");
+    
+    //TODO: Write the full vector to the standard output using std::ostream_iterator
 }
 }
 
