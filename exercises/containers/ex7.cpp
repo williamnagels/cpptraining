@@ -1,13 +1,12 @@
 #include <global.h>
-
-namespace
-{
 /*
 GOAL:
 The goal of this excercise is to implement std::array and show how easy it is to expose access to internal data
 with a custom iterator.
 */
 
+namespace
+{
 /*
 TODO: Uncomment the class 'Array' below, implement the iterator methods of the nested Iterator type 
 in a way that the Iterator class behaves like an actual random access iterator.
