@@ -34,10 +34,14 @@ void test_2()
 {
     std::vector<std::string> v{"some", "reallyactuallyreallyreallyreally", "long", "string"};
     std::string concat;
- 
-    //ASSERT(concat == "somereallyactuallyreallyreallyreallylongstring");
-    //ASSERT(v[0] == "some");
-    //ASSERT(v[1] == "");
+    //TODO: Add move operation: move all the elements from container 'v' to container 'c' while concatenating. 
+    //Note: a special type of iterator has been provided by the standard to provide move support. the 'default'
+    //iterators will copy and are no good here.
+
+    //TODO: uncomment the asserts below
+    /*ASSERT(concat == "somereallyactuallyreallyreallyreallylongstring");
+    ASSERT(v[0] == "some");
+    ASSERT(v[1] == "");*/
     
     //TODO: Q: Is moving the std::string instances into 'concat' more expansive? 
 }
