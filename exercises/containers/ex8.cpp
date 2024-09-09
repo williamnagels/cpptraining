@@ -1,5 +1,8 @@
 #include <global.h>
-
+/*
+GOAL:
+The goal of this excersise is to gain some more familiarity with algorithms that modify the content of containers
+*/
 namespace
 {
 struct Friend 
