@@ -1,5 +1,8 @@
 #include <global.h>
-
+/*
+GOAL:
+The goal of this excercise is to show that you can create lazy copy iterators.
+*/
 namespace
 {
 void test_1()
