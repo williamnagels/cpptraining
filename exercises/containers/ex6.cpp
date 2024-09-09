@@ -43,7 +43,7 @@ void test_2()
     ASSERT(v[0] == "some");
     ASSERT(v[1] == "");*/
     
-    //TODO: Q: Is moving the std::string instances into 'concat' more expansive? 
+    //TODO: Q: Is moving the std::string instances into 'concat' more expensive? 
 }
 }
 
