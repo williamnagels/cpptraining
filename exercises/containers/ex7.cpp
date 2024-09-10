@@ -50,10 +50,10 @@ void test_1()
     // Array<int, 100> test;
     
     //TODO: Add code to assign the values of the first 100 fibonnaci numbers to the array
-    //TIP: std::generate
+    //TIP: std::generate, the asserts below do not expect the leading zeroes in the fibonnaci series.
     
-    //TODO:uncomment the asserts below, this asssert assumes fibonnaci starts with 1, 
-    //if you added the leading zero's change the asser.
+    //TODO: uncomment the asserts below, these assserts assumes fibonnaci starts with 1, 
+    //if the fibonacci numbers you generated include leading zero's change the assert
     // ASSERT(test[0] == 1);
     // ASSERT(test[4] == 8);
 }
