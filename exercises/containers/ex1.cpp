@@ -83,7 +83,7 @@ void test_1() {
     //ASSERT(allocationCount == 20);
     //ASSERT(deallocationCount == 20);
 	
-    /TODO: Fix the SimplePoolAllocator implementation before uncommenting the assert below.
+    //TODO: Fix the SimplePoolAllocator implementation before uncommenting the assert below.
     //doTest<std::list<X, SimplePoolAllocator<X>>>();
     //ASSERT(allocationCount == 31); //11 = 1 + 10
     //ASSERT(deallocationCount == 31); //11 = 1 + 10
