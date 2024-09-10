@@ -4,7 +4,8 @@ namespace
 {
 
 /* Function addElement; 
-returns true if an elemente was added to container 'v', false if the element was already in the container 'v'
+Add element 'valueToAdd' to container 'v'
+Returns true if an elemenet was added to container 'v', false if the element was already in the container 'v'
 TODO:Fix the behaviour when working on test_1
 */
 template<typename T>
