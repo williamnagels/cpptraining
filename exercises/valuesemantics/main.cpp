@@ -5,7 +5,6 @@ void values_ex2();
 void values_ex3();
 void values_ex4();
 void values_ex5();
-void values_ex6();
 
 int main()
 {
