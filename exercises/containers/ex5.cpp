@@ -18,8 +18,9 @@ bool addElement(T& v, int valueToAdd){
 GOAL: Ascociative containers can implicitly provide sorting behaviour which would otherwise have to be fixed explicitly by 
 invoking an std::algorithm.
 Container 'v' must always only contain unique numbers, duplicates are not allowed.
-The original author created a preliminary API : addElement which does provide this guarantee.
-Either change the implementation of addElement to detect a duplicate or change the container type of 'v'
+The original author created a preliminary API : addElement which should provide this guarantee.
+Either change the implementation of addElement to detect a duplicate or change the container type of 'v'. 
+In the latter case, ensure that the addElement function can only be used if T is an associative container type.
 */
 void test_1()
 {
