@@ -12,8 +12,7 @@ set(MOVE_SOURCES
 	referencesemantics/ex2.cpp 
 	referencesemantics/ex3.cpp
 	referencesemantics/ex4.cpp
-	referencesemantics/ex5.cpp
-	referencesemantics/ex6.cpp)
+	referencesemantics/ex5.cpp)
 add_executable(reference ${COMMON_SOURCES} ${MOVE_SOURCES})
 
 target_compile_options(reference PRIVATE -Wall -Wextra -Wpedantic)
