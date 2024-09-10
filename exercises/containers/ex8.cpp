@@ -34,7 +34,7 @@ void test_1()
     };
 
     //TODO:Fix this - Iterator to the last vegetarian, use an algorithm with
-    //the predicate.
+    //the predicate 'isVegetarian'.
     auto it= std::begin(friends);
     
     //TODO: Uncomment these asserts
