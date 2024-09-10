@@ -1,10 +1,12 @@
 #include <global.h>
-/*
-GOAL:
-The goal of this excercise is to show that you can create lazy copy iterators.
-*/
+
 namespace
 {
+/*
+GOAL:
+The goal of this excercise is to show that you can create lazy copy iterators and not
+all std::algorithms are eager.
+*/
 void test_1()
 {
     std::vector<std::string> words = {"apple", "bananaman", "kiwi", "grape"};
