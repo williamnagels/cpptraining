@@ -11,24 +11,22 @@ class SafePtr
 
 }
 
+/*
+ * GOAL: make a class that is very similar to the unique_ptr as implemented in the STL
+ *
+ * TODO: Add the following to the "SafePtr" class:
+ *   - A public constructor that accepts a pointer to an object of type T.
+ *   - A private member with type an unmanaged pointer of type T*. Assign the value received into the constructor to this pointer.
+ *   - A default constructor that initializes the private member pointer of type T* with nullptr.
+ *   - A destructor that deletes the unmanaged pointer of type T*.
+ *   - A dereference operator that dereferences the unmanaged member pointer of type T* and returns a reference of type T&.
+ *   - A get function that returns the unmanaged pointer of type T*.
+ *   - A boolean test operator that checks the unmanaged member pointer of type T* is not a nullptr.
+ */
 void move_ex5()
 {
   /*
-   * Let's put it all together.
-   * We are going to make a class that mimics the unique_ptr class in the STL
-   *
-   * Add the following to the "SafePtr" class:
-   *   - A public constructor that accepts a pointer to the class we are wrapping
-   *   - A private member pointer to the object that we received in the constructor
-   *   - A default constructor that initializes the member with a nullptr
-   *   - A destructor that deletes the object
-   *   - A dereference operator to get to the object stored
-   *   - A get function that returns the pointer value stored
-   *   - A boolean test operator that checks if the member variable is set or not
-   */
-
-  /*
-   * If you did your job, the following code should work
+   * TODO: Uncomment these lines when the SafePtr has been implemented
    */
   // SafePtr<int> p1{new int(1)};
   // ASSERT(*p1 == 1);
@@ -38,7 +36,8 @@ void move_ex5()
   // ASSERT(p3.get() == nullptr);
 
   /*
-   * Add a move constructor so that it can handle the following code
+   * TODO: Add move constructors to class SafePtr. When constructing an object of type SafePtr by r-value reference
+   * it must steal the resource of the expiring SafePtr instance.
    */
   // SafePtr<int> p4 = SafePtr<int>(new int(4));
   // ASSERT(*p4 == 4);
@@ -51,7 +50,7 @@ void move_ex5()
   // ASSERT(p5.get() == nullptr);
 
   /*
-   * Add a move assignment operator and uncomment the code below
+   * TODO: Add a move assignment operator and uncomment the code below
    */
   // SafePtr<int> p7 = SafePtr<int>(new int(7));
   // SafePtr<int> p8 = SafePtr<int>(new int(8));
@@ -59,6 +58,6 @@ void move_ex5()
   // ASSERT(*p7 == 8);
   // ASSERT(p8.get() == nullptr);
 
-  // Bonus points if you provide an option to provide a deallocator that 
-  // does not increase the size of the SafePtr type.
+  // TODO: Bonus challenge: Make the deallocator for SafePtr customizable for releasing the unmanaged pointer of type T*, 
+  // without increasing the size of SafePtr when using the default deallocator.
 }
