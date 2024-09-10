@@ -21,7 +21,6 @@ void move_ex2();
 void move_ex3();
 void move_ex4();
 void move_ex5();
-void move_ex6();
 
 int main()
 {
@@ -30,5 +29,4 @@ int main()
   move_ex3();
   move_ex4();
   move_ex5();
-  move_ex6();
 }
