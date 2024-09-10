@@ -46,7 +46,7 @@ public:
 
 void test_1()
 {
-    //TODO: uncomment the Array instanziation
+    //TODO: uncomment the instantiation of the object of type 'Array' when the class 'Array' has been implemented.
     // Array<int, 100> test;
     
     //TODO: Add code to assign the values of the first 100 fibonnaci numbers to the array, use std::generate
