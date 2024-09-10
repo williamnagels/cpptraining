@@ -1,8 +1,5 @@
 #include <global.h>
-/*
-GOAL:
-The goal of this excersise is to gain some more familiarity with algorithms that modify the content of containers
-*/
+
 namespace
 {
 struct Friend 
@@ -16,14 +13,19 @@ bool isVegetarian(const Friend& friendObj) {
     return true; //TODO: Fix predicate
 }
 
+/*
+GOAL:
+The goal of this excersise is to gain some more familiarity with algorithms that modify the content of containers
+
+Reorder the list of friends in 2 parts. Vegetarians and non vegetarians. Do not create new lists,
+re-order the existing friends list in place.
+Reorder the list of friends so that all vegetarians are at the beginning of the list
+do not change the order of friend instances (After reordering Alice is still before David in the list)
+
+There is one algorithm that can do this.
+*/
 void test_1()
 {
-    // Reorder the list of friends in 2 parts. Vegetarians and non vegetarians. Do not create new lists,
-    // re-order the existing friends list in place.
-    // Reorder the list of friends so that all vegetarians are at the beginning of the list
-    // do not change the order of friend instances (After reordering Alice is still before David in the list)
-    //
-    // There is one algorithm that can do this.
     std::vector<Friend> friends = {
         {"Alice", "Vegetarian"},
         {"Bob", "Pescatarian"},
