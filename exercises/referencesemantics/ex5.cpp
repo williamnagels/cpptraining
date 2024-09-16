@@ -36,8 +36,8 @@ void move_ex5()
   // ASSERT(p3.get() == nullptr);
 
   /*
-   * TODO: Add move constructors to class SafePtr. When constructing an object of type SafePtr by r-value reference
-   * it must steal the resource of the expiring SafePtr instance.
+   * TODO: Add move constructors to the SafePtr class. When constructing an object of type SafePtr by r-value reference
+   * it must take ownership of the resources of the expiring SafePtr instance.
    */
   // SafePtr<int> p4 = SafePtr<int>(new int(4));
   // ASSERT(*p4 == 4);
@@ -50,7 +50,7 @@ void move_ex5()
   // ASSERT(p5.get() == nullptr);
 
   /*
-   * TODO: Add a move assignment operator and uncomment the code below
+   * TODO: Add a move assignment operator to the SafePtr class and uncomment the code below
    */
   // SafePtr<int> p7 = SafePtr<int>(new int(7));
   // SafePtr<int> p8 = SafePtr<int>(new int(8));
