@@ -25,7 +25,7 @@ void test_1()
   */
   //TODO: add assert to verify that move constructor is invoked.
 }
-/* GOAL: Get familiar with move semantics by add a move assignment constructor to the 
+/* GOAL: Get familiar with move semantics by add a move assignment operator to the 
  * Object_1 class.
  */
 void test_2()
