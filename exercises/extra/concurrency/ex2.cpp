@@ -53,7 +53,8 @@ private:
 };
 
 // Debug interface thread function
-void debugThread(WorkQueue& queue) {
+void debugThread(WorkQueue& queue)
+{
     std::cout << "debug thread-->"<<std::this_thread::get_id() << std::endl;
     while (true) {
         if(!queue.push_task([]() {
