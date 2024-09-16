@@ -30,7 +30,7 @@ void test_1()
 
 }
  
-void values_ex5()
+void values_ex3()
 {
   test_1();
 }
