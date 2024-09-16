@@ -12,12 +12,14 @@ using Meter = Distance<std::ratio<1, 1>>;
 
 // Converts a distance with precision 'FromUnit' to a distance with precision 'ToUnit'
 template <typename FromUnit, typename ToUnit>
-Distance<ToUnit> convert(const Distance<FromUnit>& distance) {
+Distance<ToUnit> convert(const Distance<FromUnit>& distance)
+{
     //TODO: implement this function
     return Distance<ToUnit>{1};
 }
 template <typename Unit>
-struct Distance {
+struct Distance
+{
     using Ratio = Unit;
     double value;
 
@@ -32,7 +34,8 @@ struct Distance {
     // Implements the plus-operator 'operator+' for instances of type Distance with any precision. No changes needed here.
     // TODO : is this safe? What can go wrong ? can you detect the issue and throw a compiler error when the issue occurs?
     template <typename OtherUnit>
-    Distance<Ratio> operator+(const Distance<OtherUnit>& other) const {
+    Distance<Ratio> operator+(const Distance<OtherUnit>& other) const
+    {
         return Distance<Ratio>(value + convert<OtherUnit, Distance<Ratio>>(other).value);
     }
 };
@@ -40,7 +43,8 @@ struct Distance {
 // This function takes a Distance type with any precision. It will 
 // convert the precision to meters and then stream the resulting value to output stream os.
 template <typename Ratio>
-std::ostream& operator<<(std::ostream& os, Distance<Ratio> const& distance) {
+std::ostream& operator<<(std::ostream& os, Distance<Ratio> const& distance)
+{
     //TODO: convert distance to a distance in meter and write to os.
     return os;
 }
