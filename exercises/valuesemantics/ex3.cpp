@@ -4,16 +4,25 @@
 namespace
 {
 
-/**
- * You should be able to create your own std::any but with comparison support.
- */
 // class MyAny
 // {
+// TODO: Remove the copy constructor.
+// TODO: Implement a move constructor.
+// TODO: Add a templated constructor that accepts any type.
+// TODO: Implement a comparison operator to check if the type and value of the instance are equal to another value.
 // };
 
-
+/**
+ * GOAL: Recreate a simplified version of `std::any`. `std::any` allows storage of any value with full type erasure,
+ * and can be conceptually compared to a smart void pointer. It provides functionality to query the type stored
+ * within the `std::any` instance.
+ * 
+ * Note: Only the behavior required to make the test succeed will be implemented, not the full `std::any` functionality.
+ * Comparison support will have to be added to make the asserts work. `std::any` does not support direct comparison of contained values.
+ */
 void test_1()
 {
+//TODO: uncomment these asserts when the MyAny class has been implemented.
 /*
   MyAny i1 = 1;
   MyAny i2 = 1;
