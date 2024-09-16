@@ -9,7 +9,7 @@ namespace
 // TODO: Delete the copy constructor.
 // TODO: Implement a move constructor.
 // TODO: Add a templated constructor that accepts any type.
-// TODO: Implement a comparison operator to check if the type and value of the instance are equal to another value.
+// TODO: Implement a comparison operator to check if the type and value of some MyAny instance is equal to another MyAny instance.
 // };
 
 /**
