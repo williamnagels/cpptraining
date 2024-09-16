@@ -44,10 +44,3 @@ set(CONT_SOURCES
 	containers/ex8.cpp
 	containers/ex9.cpp)
 add_executable(containers ${COMMON_SOURCES} ${CONT_SOURCES})
-
-set(CONC_SOURCES 
-	concurrency/main.cpp 
-	concurrency/ex1.cpp
-	concurrency/ex2.cpp)
-
-add_executable(concurrency ${COMMON_SOURCES} ${CONC_SOURCES})
