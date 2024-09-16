@@ -5,13 +5,15 @@ namespace
 int t1_value;
 int t2_value;
 
-void updateArray1() {
+void updateArray1()
+{
     for (int i = 0; i < 1000000000; ++i) {
         t1_value += i;
     }
 }
 
-void updateArray2() {
+void updateArray2()
+{
     for (int i = 0; i < 1000000000; ++i) {
         t2_value += i;
     }
