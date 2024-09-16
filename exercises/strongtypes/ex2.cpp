@@ -63,7 +63,6 @@ void test_3()
  
 void type_safe_ex2()
 {
-  std::cout << "type_safe_ex1\n";
   test_1();
   test_2();
   test_3();
