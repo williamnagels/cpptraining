@@ -23,7 +23,7 @@ set(VALUE_SOURCES
 	valuesemantics/ex2.cpp 
 	valuesemantics/ex3.cpp)
 add_executable(value ${COMMON_SOURCES} ${VALUE_SOURCES})
-#target_link_libraries(value ${CMAKE_THREAD_LIBS_INIT} )
+
 target_link_libraries(value PRIVATE Threads::Threads)
 set(STRONG_SOURCES 
 	strongtypes/main.cpp 
