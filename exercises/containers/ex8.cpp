@@ -9,7 +9,8 @@ struct Friend
 };
 
 // Predicate used to split the lists
-bool isVegetarian(const Friend& friendObj) {
+bool isVegetarian(const Friend& friendObj)
+{
     return true; //TODO: Fix predicate
 }
 
@@ -26,7 +27,8 @@ There is one algorithm that can do this.
 */
 void test_1()
 {
-    std::vector<Friend> friends = {
+    std::vector<Friend> friends = 
+    {
         {"Alice", "Vegetarian"},
         {"Bob", "Pescatarian"},
         {"Charlie", "Carnivore"},
@@ -38,7 +40,6 @@ void test_1()
     //TODO:Fix this - Iterator to the last vegetarian, use an algorithm with
     //the predicate 'isVegetarian'.
     auto it= std::begin(friends);
-    
     //TODO: Uncomment these asserts
     //ASSERT(std::distance(std::begin(friends), it) == 2);
     //ASSERT(std::distance(it, std::end(friends)) == 4);
