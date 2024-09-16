@@ -6,7 +6,7 @@ namespace
 
 // class MyAny
 // {
-// TODO: Remove the copy constructor.
+// TODO: Delete the copy constructor.
 // TODO: Implement a move constructor.
 // TODO: Add a templated constructor that accepts any type.
 // TODO: Implement a comparison operator to check if the type and value of the instance are equal to another value.
