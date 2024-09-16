@@ -21,13 +21,13 @@ int get(const Base b)
 }
 
 /**
- * Uncomment the code in test_1
- * Why does the test fail?
- * What do we need to do to solve this?
+ * GOAL: The goal is to understand how internal vtables do not interact well with
+ * value semantics
  */
 void test_1()
 {
   (void) get(Base{});
+  // TODO: when uncommenting the assert, it will fail. Why is that ?
   // Derived d(1);
   // ASSERT(get(d) == 1);
 }
@@ -54,14 +54,13 @@ struct Action
 
 
 /**
- * Uncomment the code in test_2 and run it.
- * 
- * What went wrong?
- * What do you need to do to fix this?
+ * GOAL: The goal is to understand how reference semantics do not work well with
+ * value semantics. 
  */
 void test_2()
 {
-/*
+  //TODO: uncomment the asserts below. the code will break. why is that?
+  /*
   std::vector<Action> v;
   v.emplace_back(Config{"action_1"});
   v.emplace_back(Config{"action_2"});
@@ -69,7 +68,9 @@ void test_2()
   ASSERT(v[0].perform() == "action_1");
   ASSERT(v[1].perform() == "action_2");
   ASSERT(v[2].perform() == "action_3");
-*/
+ */
+  //TODO: why does lifetime extension not work in this specific context of the 'Action' type but works for
+  //Config const& g = Config{"action_4"};
 }
 
 }
