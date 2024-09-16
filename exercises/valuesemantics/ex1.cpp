@@ -59,7 +59,7 @@ struct Action
  */
 void test_2()
 {
-  //TODO: uncomment the asserts below. the code will break. why is that?
+  //TODO: uncomment the asserts below. The code will break. Why is that?
   /*
   std::vector<Action> v;
   v.emplace_back(Config{"action_1"});
