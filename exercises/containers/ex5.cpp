@@ -9,7 +9,8 @@ Returns true if an elemenet was added to container 'v', false if the element was
 TODO:Fix the behaviour when working on test_1
 */
 template<typename T>
-bool addElement(T& v, int valueToAdd){
+bool addElement(T& v, int valueToAdd)
+{
   v.push_back(valueToAdd);
   return true;
 }
