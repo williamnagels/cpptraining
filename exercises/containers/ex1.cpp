@@ -36,17 +36,20 @@ public:
     using value_type = T;
     using storage_type = std::unique_ptr<T>;
     const std::size_t MAX=10;
-    SimplePoolAllocator() {
+    SimplePoolAllocator()
+    {
 	//TODO: init 'm_pool'
     }
     //getlement from pool
-    T* allocate(std::size_t n) noexcept {
+    T* allocate(std::size_t n) noexcept
+    {
 	//TODO: return valid memory instead of a nullptr
     	return nullptr;
     }
     
     //add element back to pool
-    void deallocate(T* p, std::size_t n) noexcept {
+    void deallocate(T* p, std::size_t n) noexcept
+    {
 	//TODO: add element p back to the pool
     }
 
@@ -64,11 +67,13 @@ template <typename ListType>
 void doTest() 
 {
     ListType myList;
-    for (int i = 0; i<10; i++){
+    for (int i = 0; i<10; i++)
+    {
         myList.push_back(typename ListType::value_type{});
     }
     myList.clear();
-    for (int i = 0; i<10; i++){
+    for (int i = 0; i<10; i++)
+    {
         myList.push_back(typename ListType::value_type{});
     }
 }
@@ -76,7 +81,8 @@ void doTest()
 //GOAL: The goal of this excercise is to demonstrate some methods to avoid unnecessary resource allocation penalties. 
 //By default, using std::list will trigger 20 allocations, but this can be reduced to 11 with a pool allocator. 
 //Further optimization can bring the number of allocations down to 10, as the maximum required allocations are known in advance.
-void test_1() {
+void test_1()
+{
     ASSERT(allocationCount == 0);
     doTest<std::list<int>>();
     //TODO: uncomment these asserts below when the overloaded operator new and delete are overloaded.
