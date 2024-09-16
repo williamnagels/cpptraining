@@ -13,9 +13,9 @@ namespace
 // };
 
 /**
- * GOAL: Recreate a simplified version of `std::any`. `std::any` allows storage of any value with full type erasure,
- * and can be conceptually compared to a smart void pointer. It provides functionality to query the type stored
- * within the `std::any` instance.
+ * GOAL: Recreate a simplified version of `std::any`. `std::any` allows storage of any type with full type erasure,
+ * and could conceptually be compared to a smart void pointer. std::any provides functionality to query the type of the value stored
+ * within.
  * 
  * Note: Only the behavior required to make the test succeed will be implemented, not the full `std::any` functionality.
  * Comparison support will have to be added to make the asserts work. `std::any` does not support direct comparison of contained values.
