@@ -2,7 +2,8 @@
 
 namespace
 {
-void threadFunction(int id, std::mutex* mutex) {  
+void threadFunction(int id, std::mutex* mutex)
+{  
     std::lock_guard<std::mutex> lock(*mutex);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 }
