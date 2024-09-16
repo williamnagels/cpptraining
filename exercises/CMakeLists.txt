@@ -4,7 +4,6 @@ project (cpptraining)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include_directories(global)
-find_package(Threads REQUIRED)
 
 set(MOVE_SOURCES 
 	referencesemantics/main.cpp 
@@ -14,7 +13,6 @@ set(MOVE_SOURCES
 	referencesemantics/ex4.cpp
 	referencesemantics/ex5.cpp)
 add_executable(reference ${COMMON_SOURCES} ${MOVE_SOURCES})
-
 target_compile_options(reference PRIVATE -Wall -Wextra -Wpedantic)
 
 set(VALUE_SOURCES 
@@ -23,14 +21,15 @@ set(VALUE_SOURCES
 	valuesemantics/ex2.cpp 
 	valuesemantics/ex3.cpp)
 add_executable(value ${COMMON_SOURCES} ${VALUE_SOURCES})
+target_compile_options(value PRIVATE -Wall -Wextra -Wpedantic)
 
-target_link_libraries(value PRIVATE Threads::Threads)
 set(STRONG_SOURCES 
 	strongtypes/main.cpp 
 	strongtypes/ex1.cpp
 	strongtypes/ex2.cpp
 	strongtypes/ex3.cpp)
 add_executable(strong ${COMMON_SOURCES} ${STRONG_SOURCES})
+target_compile_options(strong PRIVATE -Wall -Wextra -Wpedantic)
 
 set(CONT_SOURCES 
 	containers/main.cpp 
@@ -44,3 +43,4 @@ set(CONT_SOURCES
 	containers/ex8.cpp
 	containers/ex9.cpp)
 add_executable(containers ${COMMON_SOURCES} ${CONT_SOURCES})
+target_compile_options(containers PRIVATE -Wall -Wextra -Wpedantic)
