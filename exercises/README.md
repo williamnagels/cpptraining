@@ -34,7 +34,7 @@ This clean target removes all files that have been built in $ROOT_CPPTRAINING/bu
 ### CMake with Ninja
 CMake can also generate build files for Ninja, if installed:
 ```
-cmake --build $ROOT_CPPTRAINING/build -G ninja
+cmake --build $ROOT_CPPTRAINING/build -G Ninja
 ```
 With Ninja, it is possible to clean specific sub-projects instead of cleaning all targets at once:
 ```
