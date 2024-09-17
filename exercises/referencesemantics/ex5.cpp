@@ -58,6 +58,6 @@ void move_ex5()
   // ASSERT(*p7 == 8);
   // ASSERT(p8.get() == nullptr);
 
-  // TODO: Bonus challenge: Make the deallocator for SafePtr customizable for releasing the unmanaged pointer of type T*, 
-  // without increasing the size of SafePtr when using the default deallocator.
+  // TODO: Bonus challenge: Make the deallocator for SafePtr used to release the unmanaged pointer of type T*, 
+  // customizable without increasing the size of SafePtr when using the default provided deallocator.
 }
