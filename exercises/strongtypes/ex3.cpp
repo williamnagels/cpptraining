@@ -14,7 +14,7 @@ using Meter = Distance<std::ratio<1, 1>>;
 template <typename FromUnit, typename ToUnit>
 Distance<ToUnit> convert(const Distance<FromUnit>& distance)
 {
-    //TODO: implement this function
+    //TODO: Implement this function
     return Distance<ToUnit>{1};
 }
 template <typename Unit>
@@ -31,7 +31,7 @@ struct Distance
     //template <typename OtherUnit>
     //Distance(const Distance<OtherUnit>& other)
 
-    // Implements the plus-operator 'operator+' for instances of type Distance with any precision. No changes needed here.
+    // Implements the plus-operator 'operator+' for instances of type Distance with any precision. No changes needed here to make the asserts work.
     // TODO : is this safe? What can go wrong ? can you detect the issue and throw a compiler error when the issue occurs?
     template <typename OtherUnit>
     Distance<Ratio> operator+(const Distance<OtherUnit>& other) const
@@ -45,14 +45,14 @@ struct Distance
 template <typename Ratio>
 std::ostream& operator<<(std::ostream& os, Distance<Ratio> const& distance)
 {
-    //TODO: convert distance to a distance in meter and write to os.
+    //TODO: convert 'distance' to a Distance type with meter precision and print the resulting value.
     return os;
 }
 
-//TODO: Add a specific streaming operator 'operator<<' overload for micron. 
+//TODO: Add a streaming operator 'operator<<' overload for micron only. 
 //Microns should not be printed in meter precision but rather in full precision without conversion. 
-//There is an assert in test_1 which tests the output of this overload so you have to 
-//format the output to match the assert.
+//There is an assert in test_1 which tests the output of this overload. Make sure the overload
+//outputs the expected format or that assert will not succeed.
 
 /*
 GOAL: Use the chrono std::rate library in a custom type to express units of distance
