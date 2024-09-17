@@ -21,13 +21,14 @@ int get(const Base b)
 }
 
 /**
- * GOAL: The goal is to understand how internal vtables do not interact well with
- * value semantics
+ * GOAL: The goal is to understand how using both internal inheritance and value semantics
+ * leads to unexpected behaviour. 
  */
 void test_1()
 {
   (void) get(Base{});
-  // TODO: when uncommenting the assert, it will fail. Why is that ?
+  // TODO: The assert fails when it is uncommented. Why is that?
+  // What can you change to the function 'get' to make the assert succeed?
   // Derived d(1);
   // ASSERT(get(d) == 1);
 }
@@ -54,8 +55,9 @@ struct Action
 
 
 /**
- * GOAL: The goal is to understand how reference semantics do not work well with
- * value semantics. 
+ * GOAL: A common issue when mixing value and reference semantics is that the explicit nature of value semantics 
+ * might lead to lifetime problems. Lifetime extension can help prevent some issues, 
+ * but the feature is too limited in scope to prevent all issues.
  */
 void test_2()
 {
@@ -69,7 +71,7 @@ void test_2()
   ASSERT(v[1].perform() == "action_2");
   ASSERT(v[2].perform() == "action_3");
  */
-  //TODO: why does lifetime extension not work in this specific context of the 'Action' type but works for
+  //TODO: why does lifetime extension not work in this specific context of the 'Action' type but does works for
   //Config const& g = Config{"action_4"};
 }
 
