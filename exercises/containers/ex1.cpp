@@ -37,14 +37,14 @@ public:
     {
 	//TODO: init 'm_pool'
     }
-    //getlement from pool
+    // Gets element from pool, m_pool
     T* allocate(std::size_t n) noexcept
     {
 	//TODO: return valid memory instead of a nullptr
     	return nullptr;
     }
     
-    //add element back to pool
+    // Returns element back to pool, m_pool
     void deallocate(T* p, std::size_t n) noexcept
     {
 	//TODO: add element p back to the pool
@@ -59,7 +59,7 @@ struct X
 };
 
 //This function pushes 10 elements to a list it creates of type ListType.
-//then it clears the list and pushes 10 elements to the list again.
+//Then it clears the list and pushes 10 elements to the list again.
 template <typename ListType>
 void doTest() 
 {
