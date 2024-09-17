@@ -9,12 +9,12 @@ ROOT_CPPTRAINING=/home/william/cpptraining
 11:49 $ cmake -B $ROOT_CPPTRAINING/build/ -S $ROOT_CPPTRAINING/exercises/
 ```
 In this example the makefiles are generated in the ***build*** directory /home/william/cpptraining/build (-B). The CMakefile used to generated this makefile can be found in **source** directory /home/william/cpptraining/exercises/ (-S)
-This step should never fail on a clean clone. The folder must not exist, CMake will create it for you if it has sufficient permissions to create a folder.
+This step should never fail on a clean clone. The build folder must not exist, CMake will create it for you if it has sufficient permissions to create a folder.
 ### Build project using generated Makefiles
 ```
 cmake --build $ROOT_CPPTRAINING/build
 ```
-OR
+or use make directly instead of proxied by cmake
 ```
 make -C $ROOT_CPPTRAINING/build
 ```
