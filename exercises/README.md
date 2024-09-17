@@ -14,7 +14,7 @@ This step should never fail on a clean clone. The build folder must not exist, C
 ```
 cmake --build $ROOT_CPPTRAINING/build
 ```
-or use make directly instead of proxied by cmake
+Alternatively, you can use make directly instead of going through CMake:
 ```
 make -C $ROOT_CPPTRAINING/build
 ```
