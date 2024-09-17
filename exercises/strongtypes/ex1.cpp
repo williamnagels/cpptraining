@@ -52,15 +52,14 @@ std::ostream& operator<<(std::ostream& os, const Command& cmd)
 // to be used together, leading to potential misuse or security vulnerabilities.
 void test_1()
 {
-    Command command("run --option value --secret williamIsAwesome");
-
-    //TODO uncomment the asserts when the command class has been implemented.
-    std::stringstream ss;
-    ss << command;
+    //TODO uncomment the code when the command class has been implemented.
+    //Command command("run --option value --secret williamIsAwesome");
+    //std::stringstream ss;
+    //ss << command;
     // ASSERT(ss.str() == "run");
-    ss.clear();
-    command.setMayPrintArguments(true);
-    ss << command;
+    //ss.clear();
+    //command.setMayPrintArguments(true);
+    //ss << command;
     // ASSERT(ss.str() == "run --option value --secret williamIsAwesome");
 }
 }
