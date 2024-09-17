@@ -1,4 +1,4 @@
-### C++ Training
+# C++ Training
 
 ## Slides
 All slides are located in the slides/ subfolder.
