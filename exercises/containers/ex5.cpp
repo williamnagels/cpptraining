@@ -5,8 +5,8 @@ namespace
 
 /* Function addElement; 
 Add element 'valueToAdd' to container 'v'
-Returns true if an elemenet was added to container 'v', false if the element was already in the container 'v'
-TODO:Fix the behaviour when working on test_1
+Returns true 'valueToAdd' was added to container 'v', false if the element was already in the container 'v'
+TODO:Fix the behaviour
 */
 template<typename T>
 bool addElement(T& v, int valueToAdd)
@@ -32,9 +32,10 @@ void test_1()
   //ASSERT(addElement(v, 8) == false);
   ASSERT(std::unique(std::begin(v), std::end(v)) ==std::end(v));
 }
+
 /*
 GOAL: Sort the container 'v' in ascending order. Stop sorting after 4 elements have been sorted.
-Do not assume that v has at minimum 4 elements.
+Do not assume that v always has atleast 4 elements.
 */
 void test_2()
 {
