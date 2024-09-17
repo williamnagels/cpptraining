@@ -36,7 +36,7 @@ CMake can also generate build files for Ninja, if installed:
 ```
 cmake --build $ROOT_CPPTRAINING/build -G Ninja
 ```
-With Ninja, it is possible to clean specific sub-projects instead of cleaning all targets at once:
+By default CMake will generate UNIX makefiles but with Ninja, it is possible to clean specific sub-projects instead of cleaning all targets at once:
 ```
 ninja -C $ROOT_CPPTRAINING/build -t clean value
 ```
