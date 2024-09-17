@@ -8,10 +8,10 @@ namespace
 void test_1()
 {
   
-  //TODO: While the code below works. It is not typesafe. there is no way the ensure that everyone is
-  //using the precision to store in the integers. replace the int64_t with a new type Duration60kHz.
-  //Duration60kHz represents a duration of 1/60000 of a second.
-  //using Duration60kHz = std::chrono::duration<...>;
+  // TODO: The code below works but lacks type safety. There's no guarantee that the precision of the integers is consistent. 
+  // Replace `int64_t` with a new type `Duration60kHz` to ensure uniform precision.
+  // Duration60kHz represents a duration of 1/60000 of a second.
+  // using Duration60kHz = std::chrono::duration<...>;
   int64_t time2sec = 2 * 60000;
   int64_t time100ms = 100 * 60;
   int count = 10;
@@ -36,27 +36,27 @@ void test_2()
   for (int i = 0; i < 10000; ++i) v.push_back(i);
   auto total = std::accumulate(v.begin(), v.end(), 0u);
   
-  // TODO: update this system_clock::now() call aswell.
+  // TODO: Update this system_clock::now() call aswell.
   auto end = std::chrono::system_clock::now();
   auto diff = end - start;
   std::cout << "test_2 diff: " << diff.count() << " total=" << total <<std::endl;
 }
 
 // GOAL: std::chrono can prevent common math mistakes. This excercise shows how
-// with strong type (like std::chrono) the compiler is able to warn us of bad math.
+// with strong types (like std::chrono) the compiler can flag erroneous math.
 void test_3()
 {
-  // TODO: change the type of the contained elements in container lap_times.
+  // TODO: Change the type of the contained elements in container lap_times.
   // lap_times contains durations in milliseconds. There is a type in the standard that expresses exactly that.
   std::vector<uint64_t> lap_times{400, 356, 402, 397, 402, 386};
-  // TODO: change the type of total_sec to a duration in seconds
+  // TODO: Change the type of total_sec to a duration in seconds
   uint64_t total_sec = 0;
   for (auto i : lap_times)
-    //TODO: fix the math
+    //TODO: Fix the math
     total_sec += i / 1000;
   //TODO: When the TODOs above are fixed, the print should be correct.
   std::cout << "test_3: The total time is " << total_sec << " seconds\n";
-  //TODO: did you encounter any compiler warning that helped in detection loss of precision ?
+  //TODO: Did you encounter any compiler warning that helped to detection loss of precision ?
 }
 
 }
