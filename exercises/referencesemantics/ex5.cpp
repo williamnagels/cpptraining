@@ -12,7 +12,7 @@ class SafePtr
 }
 
 /*
- * GOAL: make a class that is very similar to the unique_ptr as implemented in the STL
+ * GOAL: Create a type that is very similar to the STL's std::unique_ptr
  *
  * TODO: Add the following to the "SafePtr" class:
  *   - A public constructor that accepts a pointer to an object of type T.
