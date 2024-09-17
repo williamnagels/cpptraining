@@ -24,11 +24,13 @@ ROOT_CPPTRAINING=/home/william/cpptraining
 -- Build files have been written to: /home/william/cpptraining/build
 ```
 In this example the Make files are generated in directory /home/william/cpptraining/build/. The CMake file used to generated this Make file can be found in /home/william/cpptraining/exercises/
+
 2. Build project using generated Makefiles
 ```
 make -C $ROOT_CPPTRAINING/build
 ```
 At this stage, the compiler may issue some warnings. These occur because the source files contain intentionally problematic code that has to be fixed as part of the exercises. Warnings are expected, but there should never be any compiler errors on a clean clone.
+
 3. Run test binary
 ```
 $ROOT_CPPTRAINING/strong
