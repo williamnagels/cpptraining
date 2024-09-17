@@ -5,7 +5,7 @@ namespace
 
 struct Vehicle
 {
-// TODO: Add l-value and r-value constructors.
+// TODO: Add l-value and r-value copy constructors.
 // TODO: Add a templated constructor for specific use cases.
 // TODO: Add a destructor that cleans up the vtable member by destroying the concrete instance.
 };
@@ -28,11 +28,13 @@ struct Bus
 /**
  * GOAL: Experiment with external inheritance by extending the Vehicle class.
  * Compare the effectiveness of value semantics with internal versus external inheritance to determine which works most intuitivly.
+ * Which variant (internal or external) is the most expressive to you?
  */
 void test_1()
 {
 // TODO: Uncomment the asserts below and fix the TODOs in the Vehicle class.
-// The copy constructor is not needed for this exercise yet.
+// TODO: The l-value copy constructor is not needed for this exercise, why is that?
+// The vector is resized when an element is emplaced back. Why are there no copies happening?
 
 /*
   std::vector<Vehicle> vs;
@@ -52,7 +54,7 @@ void test_1()
  */
 void test_2()
 {
-  // TODO: Uncomment the asserts below. The copy constructor will be required 
+  // TODO: Uncomment the asserts below. The l-value copy constructor will be required 
   // for this exercise.
 /*
   std::vector<Vehicle> v_old;
