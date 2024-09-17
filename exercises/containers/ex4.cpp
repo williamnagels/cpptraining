@@ -5,16 +5,15 @@ namespace
 /*
 GOAL: Show customization possibilities of std::sort using a user defined functor.
 Sort container 'v' in a descending order. Without any customization std::sort
-will sort in an ascending order. Check the signature of std::sort to figure out how 
-to sort in a descending order.
+will sort in an ascending order. Check the declaration of std::sort to figure out how 
+std::sort can be customized to sort in a descending orer.
 */
 void test_1()
 {
   std::vector<int> v = {4, 3, 6, 2, 9, 8,10};
-  //TODO: sort container 'v' in a descending order.
+  //TODO: Sort container 'v' in a descending order.
   //TODO: Change the assert below so that it checks if 'v' is sorted in descending order,
   //right now it is checking if 'v' is sorted in ascending order.
-  
   //ASSERT(std::is_sorted(std::begin(v), std::end(v)));
 }
 
@@ -29,7 +28,7 @@ void test_2()
   std::vector<int> v = {4, 3, 6, 2, 9, 8,10};
   int numberOfComparisons = 0;
 
-  //TODO: Correct the arguments of std::find_if to take some functor that counts the number of comparisons.
+  //TODO: Complete the arguments of std::find_if to take some functor that counts the number of comparisons.
   //auto it = std::find_if(v.begin(), v.end(), ...);
   //TODO: uncomment the asserts below when the custom functor has been implemented.
   //ASSERT(*it == 10);
