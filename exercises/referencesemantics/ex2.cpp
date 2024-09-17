@@ -55,6 +55,7 @@ void test_1()
   {
     v.push_back(Object1(i));
   }
+  //TODO: split has to be check for redundant copies aswell
   auto value = split(v);
 
   // These prints might help you debug:
