@@ -1,7 +1,4 @@
 #include <global.h>
-
-//TIP: It is best to start reading the documentation of test_1 and working your way through the code that way.
-
 namespace
 {
 std::size_t allocationCount = 0;
