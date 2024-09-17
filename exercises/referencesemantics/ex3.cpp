@@ -4,7 +4,7 @@
 namespace
 {
 
-// This class should not be changed. It has all the required constructors.
+// This class should not be changed. It has all the required constructors to make the asserts succeed.
 struct Object
 {
   Object(const std::string &s) : m_value(s) {}
@@ -14,7 +14,7 @@ struct Object
   std::variant<std::string, std::unique_ptr<int>> m_value;
 };
 
-//TODO: modify this function either be upgrading the argument to a universal reference or by providing
+//TODO: Modify this function, either be upgrading the argument to a universal reference or by providing
 //a seperate move only overload.
 Object builder(const std::string &v)
 {
