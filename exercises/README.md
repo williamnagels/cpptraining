@@ -1,4 +1,4 @@
-# C++ Training exercises
+# Exercises
 The instructions in this README file assume that a variable has been defined that stores the C++ Training clone destination folder, as shown below:
 ```
 ROOT_CPPTRAINING=/home/william/cpptraining
