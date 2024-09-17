@@ -1,10 +1,4 @@
 #include <global.h>
-/*
-GOAL:
-The goal of this excercise is to implement std::array and show how easy it is to expose access to internal data
-with a custom iterator.
-*/
-
 namespace
 {
 /*
@@ -44,15 +38,20 @@ public:
     Iterator end()   { }
 };*/
 
+/*
+GOAL:
+The goal of this excercise is to implement std::array and show how easy it is to expose access to internal data
+with a custom iterator that can be used by algorithms from the STL.
+*/
 void test_1()
 {
     //TODO: uncomment the instantiation of the object of type 'Array' when the class 'Array' has been implemented.
     // Array<int, 100> test;
     
     //TODO: Add code to assign the values of the first 100 fibonnaci numbers to the array
-    //TIP: std::generate, the asserts below do not expect the leading zeroes in the fibonnaci series.
+    //TIP: std::generate may be useful. NOTE: the asserts do not expect the leading zeroes in the fibonnaci series.
     
-    //TODO: uncomment the asserts below, these assserts assumes fibonnaci starts with 1, 
+    //TODO: uncomment the asserts below, these assserts assume fibonnaci starts with 1, 
     //if the fibonacci numbers you generated include leading zero's change the assert
     // ASSERT(test[0] == 1);
     // ASSERT(test[4] == 8);
