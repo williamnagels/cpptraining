@@ -18,19 +18,20 @@ struct Object_1
  */
 void test_1()
 {
-  //TODO: uncomment these lines when the move constructor is implemented
+  //TODO: Uncomment these lines when the move constructor is implemented
   /*
   std::string str = "obj";
   Object_1 o(std::move(str)); 
   */
-  //TODO: add assert to verify that move constructor is invoked.
+  //TODO: Add assert to verify that move constructor is invoked.
 }
+
 /* GOAL: Get familiar with move semantics by add a move assignment operator to the 
  * Object_1 class.
  */
 void test_2()
 {
-  //TODO: uncomment these lines when the move assignment constructor is implemented.
+  //TODO: Uncomment these lines when the move assignment constructor is implemented.
   /*
   Object_1 obj1("obj1");
   Object_1 obj2("obj2");
