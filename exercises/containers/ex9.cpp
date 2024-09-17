@@ -4,8 +4,7 @@ namespace
 {
 /*
 GOAL:
-The goal of this excercise is to show that you can create lazy copy iterators and not
-all std::algorithms are eager.
+The goal of this excercise is to show that you can create iterators that assign to something non iterable.
 */
 void test_1()
 {
