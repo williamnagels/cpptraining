@@ -26,7 +26,7 @@ theme: slide-theme
 # Excercises
 - Slides and exercises: https://github.com/williamnagels/cpptraining.git
 - How to build and solve exercises: exercises/README.md
-- Exercises/extra/compilertest. Build this executable to check compiler.
+- exercises/extra/compilertest. Build this executable to check compiler.
 ---
 # Interrupt handling
 - SIGINT whenever
