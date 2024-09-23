@@ -17,7 +17,7 @@ theme: slide-theme
 - C++99/03
     - Class/Function templates
     - Template specialization
-- C++11
+- C++11 -> C++17 era
     - Auto keyword
     - SFINAE
 - C++20
@@ -110,22 +110,21 @@ int main()
     std::cout << typeid(result).name() << std::endl;
 }
 ```
-What is the type of result? Each auto is deduced independently.
+What is the type of result? Type of a and b is deduced independently.
 
 ---
 
 # SFINAE
 ## Substituion Failure Is Not An Error
-<!--- Remove candidates from overload resolution set
-- Works with auto and templates variants of type errasure. -->
-- The compiler tries to instantiate a template
+- The compiler tries to instantiate all templates
 - No compilation error, if specialization fails due to failure to instantiate
+- Remove candidates from overload resolution set
 
 ---
 # SFINAE
 ## SFINAE example
 ```cpp
-template <typename T, typename Enable = void>
+template <typename T, typename Enable = typename std::enable_if<!std::is_integral<T>::value>::type>
 void print(const T& value) {
     std::cout << "Primary template: " << value << std::endl;
 }
@@ -134,21 +133,141 @@ typename std::enable_if<std::is_integral<T>::value>::type print(const T& value) 
     std::cout << "Integral value: " << value << std::endl;
 }
 ```
-**::value** does not exist on std::is_integeral<T> struct it T is not integeral.
-Overload only matches for all types that are considered 'integeral'
+**::value** is true for std::is_integeral<T> struct if T is integeral.
+**::value** static const member, value is known at compile time.
+
+---
+# SFINAE 
+## Compiler errors
+Assume there is no primary candidate implementation
+```cpp
+<source>:11:10: error: no matching function for call to 'print(double)'
+   11 |     print(42.0);      // Works for integers
+      |     ~~~~~^~~~~~
+<source>:6:59: note: candidate: 'template<class T> typename std::enable_if<std::is_integral<_Tp>::value>::type print(const T&)'
+    6 | typename std::enable_if<std::is_integral<T>::value>::type print(const T& value) {
+      |                                                           ^~~~~
+<source>:6:59: note:   template argument deduction/substitution failed:
+<source>: In substitution of 'template<class T> typename std::enable_if<std::is_integral<_Tp>::value>::type print(const T&) [with T = double]':
+<source>:11:10:   required from here
+   11 |     print(42.0);      // Works for integers
+      |     ~~~~~^~~~~~
+<source>:6:59: error: no type named 'type' in 'struct std::enable_if<false, void>'
+    6 | typename std::enable_if<std::is_integral<T>::value>::type print(const T& value) {
+      |
+
+```
 
 ---
 # SFINAE
 ## Custom compiler errors on primary candidate
 ```cpp
-template <typename T, typename Enable = void>
+template <typename T, typename = typename std::enable_if<!std::is_integral<T>::value>::type>
 void print(const T& value) 
 {
-    static_assert(false, "we do not support printing non integers");
+    static_assert(std::is_integral<T>::value, "we do not support printing non-integral types");
 }
+
 template <typename T>
-typename std::enable_if<std::is_integral<T>::value>::type print(const T& value) 
+typename std::enable_if_t<std::is_integral<T>::value> print(const T& value) 
 {
     std::cout << "Integral value: " << value << std::endl;
 }
 ```
+
+---
+# SFINAE
+## std::enable_if
+```cpp
+
+template<bool B, class T = void>
+struct enable_if {};
+ 
+template<class T>
+struct enable_if<true, T> { typedef T type; };
+```
+---
+# constexpr
+## C++ 17
+```cpp
+template <typename T>
+void print(const T& value) 
+{
+    if constexpr (std::is_integral_v<T>) {
+        std::cout << "Integral value: " << value << std::endl;
+    } else {
+        static_assert(std::is_integral_v<T>, "we do not support printing non-integral types");
+    }
+}
+```
+---
+# Concepts
+## C++20
+```cpp
+#include <concepts>
+template <typename T>
+concept Integral = std::is_integral_v<T>;
+void print(auto value) 
+{
+    static_assert(std::is_integral_v<decltype(value)>, "we do not support printing non-integral types");
+}
+void print(Integral auto value) 
+{
+    std::cout << "Integral value: " << value << std::endl;
+}
+
+```
+---
+# Concepts
+## Compiler errors
+Assume there is no primary candidate implementation
+```cpp
+<source>: In function 'int main()':
+<source>:13:10: error: no matching function for call to 'print(double)'
+   13 |     print(42.0);      // Works for integers
+      |     ~~~~~^~~~~~
+<source>:7:6: note: candidate: 'template<class auto:1>  requires  Integral<auto:1> void print(auto:1)'
+    7 | void print(Integral auto value)
+      |      ^~~~~
+<source>:7:6: note:   template argument deduction/substitution failed:
+<source>:7:6: note: constraints not satisfied
+<source>: In substitution of 'template<class auto:1>  requires  Integral<auto:1> void print(auto:1) [with auto:1 = double]':
+<source>:13:10:   required from here
+   13 |     print(42.0);      // Works for integers
+      |     ~~~~~^~~~~~
+<source>:5:9:   required for the satisfaction of 'Integral<auto:1>' [with auto:1 = double]
+<source>:5:25: note: the expression 'is_integral_v<T> [with T = double]' evaluated to 'false'
+    5 | concept Integral = std::is_integral_v<T>;
+      |  
+
+```
+---
+# Concepts
+## Custom concepts
+```cpp
+template <typename T>
+void print(const T& value) requires requires(T a) 
+{ 
+    std::cout << a 
+} 
+{
+    std::cout << "Value: " << value << std::endl;
+}
+```
+requires clause
+requires expression
+also works with auto
+
+---
+# Concepts
+## SFINAE code reuse
+```cpp
+template <typename T>
+void calculate_sum(const T& a, const T& b) requires (std::is_arithmetic_v<T> && requires(T x, T y) { 
+    x + y; 
+}) 
+{
+    std::cout << "Sum: " << a + b << std::endl;
+}
+````
+constructs used in SFINAE are reused as concept
