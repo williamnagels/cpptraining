@@ -1,6 +1,6 @@
 # Compiler test
 ## Building
-This CMake project includes a binary to verify if your environment is capable of compiling all exercises. The key requirement is your compiler's support for C++20 features and CMake.
+This CMake project includes a binary to verify if your environment is capable of compiling all exercises. The key requirements are your compiler's support for C++20 features and CMake.
 
 - For GCC, you need at least version 10.1.
 - For Clang, the minimum supported version is 11.
