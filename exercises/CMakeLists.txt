@@ -5,6 +5,14 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include_directories(global)
 
+set(COMPILE_TIME_POLYMORPHISM_SOURCES 
+	compile_time_polymorphism/main.cpp 
+	compile_time_polymorphism/ex1.cpp 
+	compile_time_polymorphism/ex2.cpp 
+	compile_time_polymorphism/ex3.cpp)
+add_executable(compile_time_polymorphism ${COMMON_SOURCES} ${COMPILE_TIME_POLYMORPHISM_SOURCES})
+target_compile_options(compile_time_polymorphism PRIVATE -Wall -Wextra -Wpedantic)
+
 set(MOVE_SOURCES 
 	referencesemantics/main.cpp 
 	referencesemantics/ex1.cpp 
