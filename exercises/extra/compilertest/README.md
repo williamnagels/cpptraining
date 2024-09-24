@@ -26,5 +26,5 @@ Expected output when running the compilerTest binary:
 Coroutine check OK
 Concept check OK
 ```
-There should be NO build errors.
+There should not be any build errors.
 
