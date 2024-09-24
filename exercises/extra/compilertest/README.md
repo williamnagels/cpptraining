@@ -8,10 +8,10 @@ that includes the correct GCC version. This is also a handy solution if you're u
 If you use the container, its best to volume mount the compilertest sources using -v start-up parameter.
 The example below assumes that <PATH_TO_COMPILERTEST_FOLER> is replaced with an actual path on your system. It should be replaced with the path to the folder where this README.md file is located in.
 Build the container
-'''
+```
 docker build -t cpptraining <PATH_TO_COMPILERTEST_FOLER>
-'''
+```
 Build and run the test binary
-'''
+```
 docker run --rm -v <PATH_TO_COMPILERTEST_FOLER>:/source cpptraining /bin/sh -c 'cmake -B /build -S /source ; cmake --build /build; /build/compilerTest'
-'''
+```
