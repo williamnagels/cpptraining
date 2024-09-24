@@ -18,7 +18,7 @@ docker build -t cpptraining <PATH_TO_COMPILERTEST_FOLER>
 ```
 docker run --rm -v <PATH_TO_COMPILERTEST_FOLER>:/source cpptraining /bin/sh -c 'cmake -B /build -S /source ; cmake --build /build; /build/compilerTest'
 ```
-If you are not using a container you can build using the commands from the second code snippet, ofcourse the paths have to be updated.
+If you are not using a container you can build using the commands from the second code snippet, ofcourse the paths /build /source may have to be updated.
 ## Expected result
 Expected output when running the compilerTest binary:
 ```
