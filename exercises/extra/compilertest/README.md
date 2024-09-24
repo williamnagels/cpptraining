@@ -12,11 +12,11 @@ If you use the container, its best to volume mount the compilertest sources usin
 The example below assumes that **<PATH_TO_COMPILERTEST_FOLDER>** is replaced with an actual path on your system. It should be replaced with the path to the folder where this README.md file is located in.
 - Build the container
 ```
-docker build -t cpptraining **<PATH_TO_COMPILERTEST_FOLDER>**
+docker build -t cpptraining <PATH_TO_COMPILERTEST_FOLDER>
 ```
 - Build and run the test binary in the container
 ```
-docker run --rm -v **<PATH_TO_COMPILERTEST_FOLDER>**:/source cpptraining /bin/sh -c 'cmake -B /build -S /source ; cmake --build /build; /build/compilerTest'
+docker run --rm -v <PATH_TO_COMPILERTEST_FOLDER>:/source cpptraining /bin/sh -c 'cmake -B /build -S /source ; cmake --build /build; /build/compilerTest'
 ```
 If you are not using a container you can build the compilerTest binary using the commands from the second code snippet. The paths '/build' and '/source' may have to be updated to something
 that works on your system.
