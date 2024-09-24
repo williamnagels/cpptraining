@@ -1,3 +1,5 @@
+#Compiler test
+## Building
 This CMake project includes a binary to verify if your environment is capable of compiling all exercises. The key requirement is your compiler's support for C++20 features and CMake.
 
 - For GCC, you need at least version 10.1.
@@ -17,10 +19,11 @@ docker build -t cpptraining <PATH_TO_COMPILERTEST_FOLER>
 docker run --rm -v <PATH_TO_COMPILERTEST_FOLER>:/source cpptraining /bin/sh -c 'cmake -B /build -S /source ; cmake --build /build; /build/compilerTest'
 ```
 If you are not using a container you can build using the commands from the second code snippet, ofcourse the paths have to be updated.
+## Expected result
 Expected output when running the compilerTest binary:
 ```
 Coroutine check OK
 Concept check OK
 ```
-There should be NO compiler errors
+There should be NO compiler errors.
 
