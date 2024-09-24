@@ -1,4 +1,4 @@
-#Compiler test
+# Compiler test
 ## Building
 This CMake project includes a binary to verify if your environment is capable of compiling all exercises. The key requirement is your compiler's support for C++20 features and CMake.
 
