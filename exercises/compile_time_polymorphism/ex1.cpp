@@ -4,7 +4,7 @@ namespace
 //TODO: Add a printHelper partial template specialization where T is a pointer type.
 //This primary template candidate is OK and should not be changed.
 template <typename T, bool>
-struct PrintHelper<T>
+struct PrintHelper
 {
     static void print(T const& t, std::ostream& os)
     {
