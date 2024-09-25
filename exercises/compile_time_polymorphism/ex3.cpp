@@ -10,14 +10,14 @@ concept SmallType =
 template <typename T>
 concept LargeType =
 */
-//TODO: Constrain this zip overload so that it is only used for small types.
+//TODO: Constrain this compress overload so that it is only used for small types.
 template <typename T>
-bool zip(T const& obj)
+bool compress(T const& obj)
 {
-  //Imagine some zipping algorithm that works well on small types
+  //Imagine some compressing algorithm that works well on small types
   return true;
 }
-//TODO. provide another overload for zip. That overload shall be constrained on LargeType and returns false.
+//TODO. provide another overload for compress. That overload shall be constrained on LargeType and returns false.
 
 //These types are OK and should not updated.
 struct Small 
@@ -31,9 +31,9 @@ struct Large
 };
 
 /* GOAL: Get some concepts experience by implementing the LargeType and SmallType concepts above.
-Constrain both overloads of zip(one still has to be added) with these concepts. The zip overload 
-constrained for large types returns false, while the zip overload for small types returns true.
-While you could obviously overload the function Zip on Small and Large this is not the point, the idea
+Constrain both overloads of compress(one still has to be added) with these concepts. The compress overload 
+constrained for large types returns false, while the compress overload for small types returns true.
+While you could obviously overload the function compress on Small and Large this is not the point, the idea
 is that any type could be passed to zip() and the correct algorithm is chosen automatically depending
 on the size of type T.
 */
@@ -41,10 +41,10 @@ void test_1()
 {
   Small small;
   Large large;
-  ASSERT(zip(small) == true);
+  ASSERT(compress(small) == true);
   //TODO: uncomment the assert below afer the SmallObject and LargeType concepts have been defined
   //and the overloaded zip function has been provided.
-  //ASSERT(zip(large) == false);
+  //ASSERT(compress(large) == false);
 }
 }
 void ct_poly_ex3()
