@@ -7,11 +7,10 @@ theme: slide-theme
 ---
 # What is Compile-Time Polymorphism?
 
-- Different types to be treated as the same through a common interface.
-- During compilation
+- Compile-time type erasure
 - **Templates**
-- Avoiding code duplucation.
-- Meta-programming; type inspection - compile-time logic
+- Avoid code duplication
+- Meta-programming; type inspection
 ---
 # Key features
 - C++99/03
@@ -19,6 +18,7 @@ theme: slide-theme
     - Template specialization
 - C++11 -> C++17 era
     - Auto keyword
+    - if constexpr
     - SFINAE
 - C++20
     - Concepts
@@ -61,22 +61,25 @@ int main()
 ---
 # Function template specialization
 ```cpp
-template <typename T>
-void print(T const& value)
+#include <iostream>
+template <typename T, typename S>
+void print(T const& value, S& stream)
 {
-    std::cout << "Value: " << value << std::endl;
+    stream << "Value: " << value << std::endl;
 }
-template <>
-void print(std::string const& value)
+template <typename S>
+void print(std::string const& value, S& stream)
 {
-    std::cout << "C-String: " << value << std::endl;
+    stream << "std::string specialization: " << value << std::endl;
 }
 int main()
 {
-    print(123);
-    print("Hello, world!");
+    print(123, std::cout);
+    print("combust", std::cout);
 }
 ```
+What is the output of the print statements?
+
 ---
 # C++20 - auto keyword 1/2
 ```cpp
@@ -94,7 +97,7 @@ int main()
     auto res = add("1", "2");
 }
 ```
-Overload resolution prefers type with least casts or type errasure
+Same issue as previous slide
 
 ---
 # C++20 - auto keyword 2/2
@@ -110,19 +113,82 @@ int main()
     std::cout << typeid(result).name() << std::endl;
 }
 ```
-What is the type of result? Type of a and b is deduced independently.
+What is the type of 'result'? Type of a and b is deduced independently.
 
 ---
 
 # SFINAE
-## Substituion Failure Is Not An Error
-- The compiler tries to instantiate all templates
-- No compilation error, if specialization fails due to failure to instantiate
+## Substitution Failure Is Not An Error
+- Create a set of all possible candidates includes non-specialized
+- Substitute type
+- No compilation error, if substitution fails
 - Remove candidates from overload resolution set
-
 ---
 # SFINAE
-## SFINAE example
+## Overload resolution set
+```cpp
+template <typename T, typename Stream>
+auto print(T const& value, Stream& stream) {
+    stream << "std::string specialization: " << value << std::endl;
+    return std::begin(value);
+}
+template <typename Stream>
+void print(double value, Stream& stream) {
+    stream << "Value: " << value << std::endl;
+}
+int main() {
+    print(123, std::cout);
+    print(std::string("combust"), std::cout);
+}
+```
+---
+## Overload resolution set
+Removed primary candiate from set. This compiles.
+```cpp
+template <typename T, typename Stream>
+auto print(T const& value, Stream& stream) -> T::iterator
+{
+    stream << "std::string specialization: " << value << std::endl;
+    return std::begin(value);
+}
+template <typename Stream>
+void print(double value, Stream& stream)
+{
+    stream << "Value: " << value << std::endl;
+}
+```
+---
+## Overload resolution set
+- SFINAE only works in the 'immediate' context.
+- Generally, think arguments and return type.
+- Body of a function is NOT the immediate context.
+Fails to compile - no SFINAE:
+```cpp
+template <typename T, typename Stream>
+auto print(T const& value, Stream& stream)
+{
+    typename T::iterator begin; // NOT the immediate context
+    stream << "std::string specialization: " << value << std::endl;
+    return std::begin(value);
+}
+```
+---
+# SFINAE
+## standard library
+```cpp
+namespace std 
+{
+    //Primary template for enable_if, does not contain type T
+    template<bool B, class T = void>
+    struct enable_if {};
+    //Specialization for B==True, does encapsulate type T.
+    template<class T>
+    struct enable_if<true, T> { typedef T type; };   
+}
+```
+---
+# SFINAE
+## std::enable_if example
 ```cpp
 template <typename T, typename Enable = typename std::enable_if<!std::is_integral<T>::value>::type>
 void print(const T& value) {
@@ -134,7 +200,7 @@ typename std::enable_if<std::is_integral<T>::value>::type print(const T& value) 
 }
 ```
 **::value** is true for std::is_integeral<T> struct if T is integeral.
-**::value** static const member, value is known at compile time.
+**::value** static const member -> value is known at compile time.
 
 ---
 # SFINAE 
@@ -161,44 +227,57 @@ Assume there is no primary candidate implementation
 ---
 # SFINAE
 ## Custom compiler errors on primary candidate
+Assume more than 1 specialization, but for slide reasons there is only 1 specialization.
 ```cpp
 template <typename T, typename = typename std::enable_if<!std::is_integral<T>::value>::type>
-void print(const T& value) 
+void print(T const& value) 
 {
-    static_assert(std::is_integral<T>::value, "we do not support printing non-integral types");
+    static_assert(false, "Unsupported print operation");
 }
 
 template <typename T>
-typename std::enable_if_t<std::is_integral<T>::value> print(const T& value) 
+typename std::enable_if_t<std::is_integral<T>::value> print(T const& value) 
 {
     std::cout << "Integral value: " << value << std::endl;
 }
-```
-
----
-# SFINAE
-## std::enable_if
-```cpp
-
-template<bool B, class T = void>
-struct enable_if {};
- 
-template<class T>
-struct enable_if<true, T> { typedef T type; };
 ```
 ---
 # constexpr
 ## C++ 17
 ```cpp
 template <typename T>
-void print(const T& value) 
+void print(T const& value) 
 {
-    if constexpr (std::is_integral_v<T>) {
+    if constexpr (std::is_integral_v<T>) 
+    {
         std::cout << "Integral value: " << value << std::endl;
-    } else {
-        static_assert(std::is_integral_v<T>, "we do not support printing non-integral types");
+    } 
+    else 
+    {
+        static_assert(false, "Unsupported print operation");
     }
 }
+```
+---
+# constexpr
+```cpp
+template <typename T>
+void print(T const& value) 
+{
+    if constexpr (value == 124) 
+    {
+        std::cout << "Integral value: " << value << std::endl;
+    } 
+    else 
+    {
+        static_assert(false, "Unsupported print operation");
+    }
+}
+```
+```
+<source>:5:5: error: 'value' is not a constant expression
+    5 |     if constexpr (value == 124)
+      |     ^
 ```
 ---
 # Concepts
@@ -207,15 +286,14 @@ void print(const T& value)
 #include <concepts>
 template <typename T>
 concept Integral = std::is_integral_v<T>;
-void print(auto value) 
+void print(auto const& value) 
 {
-    static_assert(std::is_integral_v<decltype(value)>, "we do not support printing non-integral types");
+    static_assert(std::is_integral_v<decltype(value)>, "Unsupported print operation");
 }
-void print(Integral auto value) 
+void print(Integral auto const& value) 
 {
     std::cout << "Integral value: " << value << std::endl;
 }
-
 ```
 ---
 # Concepts
@@ -246,10 +324,7 @@ Assume there is no primary candidate implementation
 ## Custom concepts
 ```cpp
 template <typename T>
-void print(const T& value) requires requires(T a) 
-{ 
-    std::cout << a 
-} 
+void print(T const& value) requires requires(T a) {  std::cout << a } 
 {
     std::cout << "Value: " << value << std::endl;
 }
@@ -260,14 +335,30 @@ also works with auto
 
 ---
 # Concepts
-## SFINAE code reuse
+## Combination of requires and predicate
 ```cpp
 template <typename T>
-void calculate_sum(const T& a, const T& b) requires (std::is_arithmetic_v<T> && requires(T x, T y) { 
+void calculate_sum(T const& a, T const& b) requires (std::is_arithmetic_v<T> && requires(T x, T y) { 
     x + y; 
 }) 
 {
     std::cout << "Sum: " << a + b << std::endl;
 }
-````
-constructs used in SFINAE are reused as concept
+```
+---
+# Concepts
+## Constrained class template
+```cpp
+template <typename T>
+concept Addable = requires(T a, T b)
+{
+    { a + b } -> std::same_as<T>;
+};
+template <Addable T>
+struct Calculator 
+{
+    Calculator(T value) : m_value(value) {}
+private:
+    T m_value;
+};
+```
