@@ -57,9 +57,42 @@ void test_2()
     ASSERT(ss.str() == "pointer with value 13");*/
 }
 
+// Primary candiate is OK. No changes needed.
+template <typename T, typename V=void>
+struct has_encrypt : std::false_type {};
+
+// TODO: This overload candidate is not selected. Fix the 
+// candidate to detect an encrypt function on T then uncomment
+// the assert in test_3
+template <typename C>
+struct has_encrypt<C, typename C::encrypt> : std::true_type {};
+
+// Helper variable template (C++14 onwards). OK. No changes needed
+template <typename C>
+inline constexpr bool has_encrypt_v = has_encrypt<C>::value;
+
+// Test classes, These should not be modified.
+struct A
+{
+    bool encrypt() { return true;/*dummy implementation*/}
+};
+
+//GOAL: The goal of this exercise is to realize the difference between template specialization initalization
+//and substitution. Fix the has_encrypt partial specialization so that it properly detects
+//any encrypt method on type C. Why is the specialization not selected? Surely it should be
+//since class A has an encrypt method and that overload is more specialized.
+void test_3()
+{
+    static_assert(!has_encrypt_v<std::string>, "Detected encrypt on std::string");
+    //TODO: uncomment this assert when the has_encrypt specialization has been fixed
+    //to detect a member function 'encrypt' on struct A.
+    //static_assert(has_encrypt_v<A>, "Did not detect encrypt on A");
+}
+
 }
 void ct_poly_ex1()
 {
   test_1();
   test_2();
+  test_3();
 }
