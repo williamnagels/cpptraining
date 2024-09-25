@@ -23,7 +23,8 @@ void print(T const& t, std::ostream& os)
 //GOAL: The goal of this exercise is to get some experience with template overloading and template specialization.
 //The function print below is called for a value-type 'int' in the uncommented code.
 //it will write the value of i to the provided std::stringstream.
-//The idea is that in the commented call to print a pointer is passed which selects another candidate because it is a pointer type.
+//The idea is that in the commented call to print, a pointer is passed as argument. This should cause the compiler to select another candiate from the set.
+//That other candidate should write a different string to stringstream to make the assert succeed.
 void test_1()
 {
     std::stringstream ss;
@@ -43,7 +44,7 @@ void print2(T const& t, std::ostream& os)
     //the asserted output in test_2 correctly if T is a pointer.
     os << t;
 }
-//GOAL: Solve test_1 with a compile-time if expression instead of overloading the function print2.
+//GOAL: Solve test_1 with a compile-time if expression. Do not overload function print2.
 void test_2()
 {
     std::stringstream ss;
