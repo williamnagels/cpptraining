@@ -43,7 +43,7 @@ void test_1()
   Large large;
   ASSERT(compress(small) == true);
   //TODO: uncomment the assert below afer the SmallObject and LargeType concepts have been defined
-  //and the overloaded zip function has been provided.
+  //and the overloaded compress function has been provided.
   //ASSERT(compress(large) == false);
 }
 }
