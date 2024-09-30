@@ -17,6 +17,7 @@ theme: slide-theme
     - Class/Function templates
     - Template specialization
 - C++11 -> C++17 era
+    - Variable templates
     - Auto keyword
     - if constexpr
     - SFINAE
@@ -115,6 +116,26 @@ int main()
 ```
 What is the type of 'result'? Type of a and b is deduced independently.
 
+---
+# Variable templates
+## C++14
+```cpp
+template<class T>
+constexpr T pi = T(3.1415926535897932385L);
+template<class T>
+T circular_area(T r) {
+    return pi<T> * r * r;
+}
+```
+vs
+```cpp
+template <typename T>
+struct PI {
+    PI():value(3.1415926535897932385L){}
+    static const T value;
+}
+PI<T>::value
+```
 ---
 
 # SFINAE
