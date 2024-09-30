@@ -254,7 +254,24 @@ void print(T const& value)
     } 
     else 
     {
-        static_assert(false, "Unsupported print operation");
+        std::cout << "Non integral value: " << value << std::endl;
+    }
+}
+```
+---
+# constexpr
+## decltype
+But what if you are using 'auto' and do not have a type 'T'?
+```cpp
+void print(auto const& value) 
+{
+    if constexpr (std::is_integral_v<decltype(value)>) 
+    {
+        std::cout << "Integral value: " << value << std::endl;
+    } 
+    else 
+    {
+        std::cout << "Non integral value: " << value << std::endl;
     }
 }
 ```
