@@ -154,11 +154,13 @@ int main() {
     MySet mySet;
     mySet.insert(20);
 }
-https://gcc.gnu.org/onlinedocs/libstdc++/libstdc++-html-USERS-4.1/structstd_1_1___rb__tree__node.html
 ---
 Allocating: 40 bytes
 ```
+https://gcc.gnu.org/onlinedocs/libstdc++/libstdc++-html-USERS-4.1/structstd_1_1___rb__tree__node.html
+
 ---
+
 ```cpp
 template <typename T>
 struct CustomAllocator {
@@ -180,206 +182,396 @@ struct CustomAllocator {
     }
 };
 ```
-## Pass by value
-- Copies state of object
-- Independent mutable state
-```cpp
-void do_something(std::vector<int>)
-```
 ---
-Move semantics facilitate performant value semantics
 ```cpp
-std::vector<std::string> getPoems()
+int main() 
 {
-  std::vector<std::string> ans; // imagine ans contains data
-  return ans;
+    using T = std::string;
+    using MySet = std::unordered_set<T, std::hash<T>, std::equal_to<T>, CustomAllocator<T>>;
+    CustomAllocator<T> myAllocator;
+    MySet mySet({}, 1, std::hash<T>(), std::equal_to<T>(), myAllocator);
+    std::cout << "created bucket"<<std::endl;
+    mySet.insert("a");
+    std::cout << "inserted element"<<std::endl;
+    for (auto const& element : mySet) {
+        std::cout << "value="<<element << " hash=" << std::hash<T>()(element)<< std::endl;
+    }
+    return 0;
 }
-int main(){
-    std::vector<std::string> poems = getPoems();
-} 
+---
+Allocating 0x7ffc3ef5dc8f name=PNSt8__detail15_Hash_node_baseE n=2 T=8
+created bucket
+Allocating 0x7ffc3ef5de50 name=NSt8__detail10_Hash_nodeINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEELb1EEE n=1 T=48
+inserted element
+value=a hash=4993892634952068459
+Deallocating
+Deallocating
 ```
 ---
-## return-value optimization
+ex1.cpp
+
+---
+## Data locality
+- Decrease time complexity, increase space complexity
+- Increased space complexity could reduce performance due to decreased data locality.
+- Pocality std::vector > locality std::set
+- Pointer chasing is really bad
+
+---
+- Register
+- Cache (L1<L3)
+- Ram
+- Flash
+
+---
+- Data is transferred from memory to cache in blocksize = cache line
+- Cache lines are invalidated on data write
+- L1 cache lines are typically not shared between cores
+- False sharing
+```bash
+william@vbox:~$ getconf LEVEL1_DCACHE_LINESIZE
+64
+```
+---
 ```cpp
-class GFG {
+uint8_t[64] _cacheLine;
+```
+- CORE-0 writes to _cacheLine[0];
+- CORE-1 writes to _cacheLine[7];
+- Cache line constantly invalidated, constantly reshared between cores,
+CPU does not know which byte in cache line is invalidated, it only knows that block of bytes needs to be synced
+----
+- Avoid false sharing by allocating on cache line boundary
+- Aligning memory can be done by using alignas
+```cpp
+int main()
+{
+    alignas(sizeof(decltype(_cacheLine)) uint64_t a;
+    alignas(sizeof(decltype(_cacheLine)) uint64_t c;
+    std::cout << &a << std::endl;
+    std::cout << &c << std::endl;
+    std::cout << (&a - &c) << std::endl;
+}
+---
+0x7ffc876e9c40
+0x7ffc876e9c00
+8
+```
+---
+## Array of structures vs structure of arrays
+- False sharing is an issue
+- Data locality is an issue
+- Consider a set of Layer 2 network packets
+```cpp
+struct L2 {
+    uint16_t sourcePort;
+    uint16_t destinationPort;
+    uint64_t sourceMacAddress;
+    uint64_t destinationMacAddress;
+};
+```
+Rewrite source port to some other value eg NAT
+
+---
+## Array of structures
+```cpp
+struct L2 
+{
+    uint16_t sourcePort;
+    uint16_t destinationPort;
+    uint64_t sourceMacAddress;
+    uint64_t destinationMacAddress;
+};
+
+int main() 
+{
+    const size_t packetCount = 100;
+    std::array<L2, packetCount> stream;
+
+    for (int i = 0; i < packetCount; ++i) {
+        if (stream[i].sourcePort == 123) {
+            stream[i].sourcePort = 0;
+        }
+    }
+
+    return 0;
+}
+```
+---
+## Structure of arrays
+```cpp
+
+struct Stream 
+{
+    std::vector<uint16_t> sourcePort;
+    std::vector<uint16_t> destinationPort;
+    std::vector<uint64_t> sourceMacAddress;
+    std::vector<uint64_t> destinationMacAddress;
+};
+
+int main() 
+{
+    const size_t packetCount = 100;
+    Stream stream;
+    for (int i = 0; i < packetCount; ++i) {
+        if (stream.sourcePort[i] == 123) {
+            stream.sourcePort[i] = 0;
+        }
+    }
+    return 0;
+}
+```
+---
+## Optimizations
+- Profile your code
+- Change layout of data members
+- Measure cache misses in hot path: cachegrind
+- Avoid allocating in hot path
+- Manage algorithmic complexity
+---
+# Containers
+## Algorithms
+- Make code more expressive: raises the level of abstraction
+- Avoid common mistakes; empty containers, too complex
+- Rely on tested algorithms used by many developers
+---
+## Heaps
+- Binary tree variant called a heap
+- No memory overhead, retrieval of the maximum or minimum(depending on heap configuration) element with O(1) complexity
+- Unlike RB-trees, not possible to find random elements using O(log n) complexity. Inserting an element is O(log n) complex.
+---
+## Heaps
+- The main property of this tree is that child nodes are smaller than parent nodes.
+//TODO Image here
+
+---
+```cpp
+void print(auto container)
+{
+    for(auto const& e:container)
+    {
+        std::cout << e<< ' ';
+    }
+    std::cout << 	std::boolalpha<<std::is_heap(std::begin(container), 	std::end(container)) <<std::endl;
+}
+int main()
+{
+    std::vector<int> x = {4,7,-1, 5, 4, 3};
+    print(x);
+    std::make_heap(std::begin(x), std::end(x));
+    print(x);
+    x.push_back(100);
+    print(x);
+    std::push_heap(std::begin(x), std::end(x));
+    print(x);
+}
+---
+Program stdout
+4 7 -1 5 4 3 false
+7 5 3 4 4 -1 true
+7 5 3 4 4 -1 100 false
+100 5 7 4 4 -1 3 true
+```
+---
+Most common use-case for me is to get some kind of min/max measurement, store the measurements and get O(1) access to largest/smallest measurement
+
+---
+## Sorting
+- The standard requires std::sort to do max O(n log(n)) comparisons at most.
+- Introsort provides this worst-case performance complexity and is used by for example gcc.
+
+---
+## Sorting example
+```cpp
+void print(auto container)
+{
+    for(auto e:container)
+    {
+        std::cout << e<< ' ';
+    }
+    std::cout << std::boolalpha<<std::is_sorted(std::begin(container), std::end(container)) <<std::endl;
+}
+int main()
+{
+    std::vector<int> x = {4,7,-1, 5, 4, 3};
+    print(x);
+    std::sort(std::begin(x), std::end(x));
+    print(x);
+    std::cout << "Has element: "<< (std::find(std::begin(x), std::end(x), 4) != std::end(x)) << std::endl;
+    std::cout << "Has element: "<< std::binary_search(std::begin(x), std::end(x), 4) << std::endl;
+}
+---
+4 7 -1 5 4 3 false
+-1 3 4 4 5 7 true
+Has element: true
+Has element: true
+```
+
+---
+## Linear vs binary search
+- It is possible to find an element using std::find: O(n)
+- std::binary_search and std::lower_bound O(log(n)) -> requires sorted range. Undefined behaviour if range is unsorted
+---
+## Partitioning a container
+- std::partition partitions a range in 2 parts based on some predicate.
+- std::stable_partition makes sure that internal position of elements in both parts is maintained.
+
+---
+## Partitioning example
+```cpp
+void print(auto const& container)
+{
+    for(auto const& e:container)
+    {
+        std::cout << e<< ' ';
+    }
+    std::cout << std::boolalpha<<std::is_sorted(std::begin(container), std::end(container)) <<std::endl;
+}
+int main()
+{
+    std::vector<int> x = {4,7,-1, 5, 4, 3};
+    print(x);
+    auto backup_x = x;
+    std::partition(std::begin(x), std::end(x), [](auto e){ return e > 4;});
+    print(x);
+    std::stable_partition(std::begin(backup_x), std::end(backup_x), [](auto e){ return e > 4;});
+    print(backup_x); 
+}
+---
+4 7 -1 5 4 3 false
+5 7 -1 4 4 3 false
+7 5 4 -1 4 3 false
+```
+
+---
+## Transform/reduce
+- std::transform is used to type convert while looping over a collection. 
+- std::reduce/std::accumulate collapses a range into 1 element by applying a functor to each element.
+
+---
+### Transform/reduce example
+```cpp
+struct Equity
+{
+    std::string name;
+    int value;
+};
+int main()
+{
+    std::vector<Equity> equities = {{"goog",100}, {"aapl", 200}};
+
+    std::vector<int> values(std::size(equities));
+    std::transform(std::begin(equities), std::end(equities), std::back_inserter(values), [](auto e){return e.value;});
+    int total_value = std::reduce(std::begin(values), std::end(values));
+    std::cout << "Total equity value: "<< total_value << std::endl;
+
+
+    int total_value_2 = std::transform_reduce(std::begin(equities), std::end(equities), 0, 
+        std::plus<>(), [](auto e){return e.value;});
+
+    std::cout << "Total equity value: "<< total_value_2 << std::endl;
+}
+```
+---
+### std::generate, std::fill and std::copy
+- std::generate, executes a functor for each element in the container and assigned its return value to that value.
+- std::fill assigns an identical value to each element
+- std::copy, copies element from one container to another.
+
+---
+### std::generate, std::file and std::copy example
+```cpp
+void print(auto container)
+{
+    for(auto e:container)
+    {
+        std::cout << e<< ' ';
+    }
+    std::cout << std::endl;
+}
+auto generator = [i = 0]() mutable {return i++;};
+int main()
+{
+    std::vector<int> x(10);
+
+    std::fill(std::begin(x), std::end(x), 1);
+    print(x);
+    std::generate(std::begin(x), std::end(x), generator);
+    print(x);
+    std::copy(std::begin(x), std::begin(x)+2, std::begin(x)+2);
+    print(x);
+}
+---
+1 1 1 1 1 1 1 1 1 1 
+0 1 2 3 4 5 6 7 8 9 
+0 1 0 1 4 5 6 7 8 9 
+```
+---
+## Algorithms
+- STL algorithms often require pipelining
+- When transforming elements from one vector into another, you may not want to transform each element. e.g. some element is null. You can create a custom iterator
+- Stl algorithms are not lazy.
+- Ranges! C++20 feature.
+
+---
+## Custom iterator
+```cpp
+template<class C, class F>
+class conditional_back_insert_iterator {
+protected:
+  C* container;
+  F  f;
 public:
-    GFG() { std::cout << "Ctor"<<std::endl; }
-    GFG(const GFG&){ std::cout << "Copy Ctor"<<std::endl; }
-    GFG(GFG&&){ std::cout << "Move Ctor"<<std::endl; }
+  using container_type = C;
+  using iterator_category =std::output_iterator_tag;
+  using value_type=void;
+  using difference_type=void;
+  using pointer=void;
+  using reference=void;
+    
+  explicit conditional_back_insert_iterator( C& __x, F __f ) :
+		container( &__x ), f(std::move(__f)) { }
+    
+  conditional_back_insert_iterator& operator=(typename C::value_type const& v) 
+  { 
+    if (f(v)){
+      container->push_back(v);
+    }
+    return *this;
+  }
+}   
+```
+---
+## ranges vs iterators example.
+```cpp
+struct Element{
+    int x;
 };
-GFG func()
-{
-  return GFG(); // RVO example
-}
-int main()
-{
-    GFG G = func();
-}
----
-Ctor
-```
----
-## Pass by reference
-- Copy reference to object state
-- Multiple references to same instance possible, race conditions
-- Lifetime complexity
-```cpp
-void do_something(int*, int size)
-```
----
-- Value semantics are preferred, language is evolving in this direction.
-- Nr of bugs, ownership and concurrency have a strong correlation.
-- Internal inheritance (e.g. vtable) requires reference semantics out of necessity. value semantics would slice base object.
----
-## Library support
-- std::variant: closed type, open operation set polymorphism, single dispatch unlike typical double dispatch visitor implementations
-- std::optional
-- std::expected
-- std::any: void* with runtime safety
----
-```cpp
-#include <iostream>
-#include <variant>
-template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
-using VariantType = std::variant<int, std::string>;
-std::string get(VariantType v){
-    return std::visit(overloaded {
-        [](int arg) { return std::to_string(arg); },
-        [](const std::string& arg) { return arg;},
-    }, v);
-}
 int main(){
-
-    VariantType v = {"dro"};
-    std::cout<<get(v)<<std::endl;
-    v={10};
-    std::cout<<get(v)<<std::endl;
+    auto filter = [](int i) { return i < 5; };
+    auto transform = [](int i) -> Element { return Element{i}; };
+    std::vector<Element> filtered_elements;
+    std::vector<int> container = {1, 2, 3, 4, 5, 6, 7, 8};
+    std::transform(
+        std::begin(container),
+        std::end(container), 
+        conditional_back_insert_iterator(filtered_elements, 
+	[](Element e){return e.x < 5;}), [](int x){return Element{x};});
+    print(std::begin(filtered_elements), std::end(filtered_elements));
+    std::cout << std::endl;
+    auto lazy_evaluation = container | std::views::filter(filter) | std::views::transform(transform);
+    print(std::begin(lazy_evaluation), std::end(lazy_evaluation));
 }
 ```
 ---
-## Complexity
-- Deep copying 
--- Produces a new, independent object; object (member) values are copied
--- std::vector O(N) copies vs O(1) copies when using reference semantics
--- Move semantics, copy elision reduces overhead. 
-- Copy on write
--- Shared mutable state accessible from distinct contexts complicates the concurrency model. When should the shared object be deconstructed?
----
-exercises/value_semantics/ex1.cpp
-exercises/value_semantics/ex2.cpp
-exercises/value_semantics/ex3.cpp
-
----
-# value semantics
-## Polymorphism and value types
----
-## Slicing
-- Slicing occurs when vtable info is lost
 ```cpp
-Base& a = get_some_reference();
-Base b = a;
-```
-- Slicing hinders the combination of value semantics and classic inheritance
----
-## Value semantics for class hierarchy
-Expressive, not loaded with c++ technicalities like references pointers etc.
-```cpp
-Derived a;
-Base &b = a;
-auto c = b;
-std::vector<Base> v;
-v.emplace_pack(Derived1());
-v.emplace_pack(Derived2());
-v.emplace_pack(Derived3());
-```
----
-## Goal
-We want to generalize the concrete types to a common interface without any vtable like inheritance
-
----
-## Goal
-```cpp
-int main()
+template <typename T>
+void print(T begin, T end)
 {
-  std::vector<Animal> v;
-  v.emplace_back(Dog());
-  v.emplace_back(Cat());
-  for (auto &a : v)
-  {
-    a.speak();
-  }
-    
+    for(auto it = begin; it !=end; it++)
+    {
+        Element const& e = *it;
+        std::cout << e.x<< ' ';
+    }
 }
 ```
----
-## Type erasure
-```cpp
-struct Vtable
-{
-  void (*speak)(void *ptr);
-  void (*destroy)(void *ptr);
-};
-```
-- holds function pointers that can operate on objects without knowing their concrete types at compile time
----
-```cpp
-template <class Concrete>
-constexpr Vtable vtable_for
-{
-  [](void *ptr){ static_cast<Concrete*>(ptr)->speak(); },
-  [](void *ptr){ delete static_cast<Concrete*>(ptr); },
-};
-```
-- vtable_for<T> is a variable template. C++14 feature.
-- constexpr ensures compile-time instantiation.
----
-```cpp
-struct Animal
-{
-  Animal(const T& t);
-  ~Animal();
-  void speak();
-  void *m_concrete;
-  Vtable const* m_vtable;
-};
-```
-- Animal stores a void pointer to the concrete implementation
-- Memory fragmentation. Pointer chasing.
----
-```cpp
-template<class T>
-Animal(const T& t)
-  : m_concrete(new T(t))
-  , m_vtable(&vtable_for<T>)
-{};
- ~Animal()
-  {
-    if (m_vtable)
-      m_vtable->destroy(m_concrete);
-  }
-
-  void speak()
-  {
-    if (m_vtable)
-      m_vtable->speak(m_concrete);
-  }
-```
-- Templated constructor, instantiates vtable_for templated constexpr variable
----
-```cpp
-struct Dog
-{
-  void speak() { std::cout << "Woof\n"; }
-};
-
-struct Cat
-{
-  void speak() { std::cout << "Meow\n"; }
-};
-```
----
-## Other use-cases
-- You can’t easily extend a class with interfaces
-- Cleanup class hierarchy
-- Template cleanup
-- ...
