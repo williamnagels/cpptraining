@@ -16,7 +16,7 @@ docker build -t cpptraining <PATH_TO_COMPILERTEST_FOLDER>
 ```
 - Build and run the test binary in the container
 ```
-docker run --rm -v <PATH_TO_COMPILERTEST_FOLDER>:/source cpptraining /bin/sh -c 'cmake -B /build -S /source ; cmake --build /build; /build/compilerTest'
+docker run --rm -v <PATH_TO_COMPILERTEST_FOLDER>:/source cpptraining /bin/sh -c "cmake -B /build -S /source ; cmake --build /build; /build/compilerTest"
 ```
 If you are not using a container you can build the compilerTest binary using the commands from the second code snippet. The paths '/build' and '/source' may have to be updated to something
 that works on your system.
