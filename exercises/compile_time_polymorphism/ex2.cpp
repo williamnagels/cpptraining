@@ -66,10 +66,30 @@ void test_2()
         //ASSERT(ss.str() == "13");
     }
 }
+template <typename T>
+void print2(T const& t, std::ostream& os)
+{
+    //TODO add a compiletime if expression here that will print
+    //the asserted output in test_2 correctly if T is a pointer.
+    os << t;
+}
+//GOAL: Solve ex1.cpp/test_1 with a compile-time if expression. Do not overload function print2.
+void test_3()
+{
+    std::stringstream ss;
+    int i = 13;
+    print2(i, ss);
+    ASSERT(ss.str() == "13");
+    //TODO: uncomment the asserts below when the compile-time if logic has been added to print2
+    /*ss.clear();
+    print2(&i, ss);
+    ASSERT(ss.str() == "pointer with value 13");*/
+}
 
 }
 void ct_poly_ex2()
 {
   test_1();
   test_2();
+  test_3();
 }

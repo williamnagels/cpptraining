@@ -37,25 +37,6 @@ void test_1()
     ASSERT(ss.str() == "pointer with value 13");*/
 }
 
-template <typename T>
-void print2(T const& t, std::ostream& os)
-{
-    //TODO add a compiletime if expression here that will print
-    //the asserted output in test_2 correctly if T is a pointer.
-    os << t;
-}
-//GOAL: Solve test_1 with a compile-time if expression. Do not overload function print2.
-void test_2()
-{
-    std::stringstream ss;
-    int i = 13;
-    print2(i, ss);
-    ASSERT(ss.str() == "13");
-    //TODO: uncomment the asserts below when the compile-time if logic has been added to print2
-    /*ss.clear();
-    print2(&i, ss);
-    ASSERT(ss.str() == "pointer with value 13");*/
-}
 
 // Primary candiate is OK. No changes needed.
 template <typename T, typename V=void>
@@ -81,7 +62,7 @@ struct A
 //and substitution. Fix the has_encrypt partial specialization so that it properly detects
 //any encrypt method on type C. Why is the specialization not selected? Surely it should be
 //since class A has an encrypt method and that overload is more specialized.
-void test_3()
+void test_2()
 {
     static_assert(!has_encrypt_v<std::string>, "Detected encrypt on std::string");
     //TODO: uncomment this assert when the has_encrypt specialization has been fixed
@@ -94,5 +75,4 @@ void ct_poly_ex1()
 {
   test_1();
   test_2();
-  test_3();
 }

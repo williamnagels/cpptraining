@@ -2,31 +2,43 @@
 marp: true
 theme: slide-theme
 ---
-# C++ Training
-## Containers
+<!-- _class: first-slide -->
 ---
-TODO insert complexity scaling image here
+# C++ Training
+## Algorithms and containers
+<!-- _class: second-slide -->
+---
+# Complexity
+![](images/complexity.jpg)
+
 ---
 # Time complexity
-- O(1). “Regardless of #elements, operation takes constant time”
-- O(n). Loop over each item and do an operation, print all items
-- O(log(n)+c). Base 2. Binary search 
+- O(1). Regardless of #elements, operation takes constant time. e.g. size of vector
+- O(n). Loop over each element and do an operation. e.g. print all items
+- O(log(n)+c). Base 2. e.g. Binary search 
 -- Size 7. Worst case search complexity log(7) -> 3
 
 ---
-TODO insert binary search image here
+## log(n)
+![](images/binarysearch.png)
 
 ---
-TODO insert complexity image here
+## Complexity of C++ containers
+![](images/complexitycpp.png)
+
+when sorted assumes binary search is used. which is log(n)
 
 ---
-
-## std::array vs std::vector
+## std::vector
 - std::array. Fixed size memory. could be stack. could be heap.
 - std::vector. heap allocates. Dynamic Size
-- Back insert/erase -> N operations may be needed if not back position.
+- Insertion -> N operations may be needed if needs to reallocate
+- Access -> random access due to memory layout
+- Erase -> N operations may be needed to due copying to fill gap
+- Find -> log(N) if sorted
+- No persistent iterators due to reallocation;
 ---
-## vector resize
+## resizing an std::vector
 ```cpp
 void print(auto const& x)
 {
@@ -44,7 +56,7 @@ int main()
 }
 ```
 ---
-- If capacity grows the base memory address changes
+- If capacity grows the heap address changes, hinting at realloction
 - Expensive operation
 ```cpp
 Program stdout
@@ -62,15 +74,23 @@ capacity: 16 0xa54f30
 ---
 
 ## std::list / std::forward_list
-- Double linked list (forward and backwards traversable)
-- Search is linear in complexity even when sorted.
-- Useful for stacks, list priorities etc.
-- No random access (linear when not using iterator)
+- std::list = double linked list (forward and backwards traversable)
+- Insertion -> 1, updating of node pointers
+- Access -> N, no random access
+- Erase -> 1, updating node pointers
+- Find -> N even if sorted, no random access
+- Iterators are persistent due to pointer updates.
 ---
 ## std::deque
 - Hybrid between std::vector and std::list
 - Linked list like structure, each node(bucket) of the list has the capacity to store more than 1 element.
-- The O(1) access complexity of std::deque is paid for by increasing space complexity.
+- The O(1) access complexity of std::deque is paid for by increasing space complexity, hashmap
+---
+## std::deque
+- Insertion -> 1, insert new node at front or back. else vector behaviour
+- Access -> 1, hashmap. mandated by standard
+- Erase -> 1, remove front or back else vector behaviour
+- Find -> 1, hashmap
 ---
 ## std::deque
 ```cpp
@@ -95,7 +115,7 @@ __deque_buf_size(size_t __size)
 ---
 ## std::map
 - std::set is an std::map where the value is also used as key/comparator implementation
-- log(n) across the board -> rb tree
+- log(n) across the board. mandated by the standard. Typically rb-tree.
 - Not contiguous in memory
 ---
 ## rb-trees
@@ -107,7 +127,7 @@ __deque_buf_size(size_t __size)
 - Rebalancing the tree is log(n)
 ---
 ## std::unordered_map/std::unordered_set
-- O(1) achieved by hashing. Hashing can be expensive
+- O(1) achieved by hashing. Hashing can be expensive. O(1) can be bad.
 - If you need to store unique elements and care about order, use std::set.
 - Store unique elements and do not care about order use set::unordered_set.
 ---
@@ -129,24 +149,23 @@ template<
 ```
 ---
 # Space complexity
-- std::vector: 8 bytes - contigious
-- std::deque: size of block - not contigious
-- std::list: 24 bytes - not contigious
-- std::set: 8 + 3 * 8 + 8 - not contigious
+- Implementation defined
+1. std::vector: 8 bytes - contigious
+2. std::deque: size of block - not contigious
+3. std::list: 24 bytes - not contigious
+4. std::set: 8 + 3 * 8 + 8 - not contigious
 
 ---
 ```cpp
 template <typename T>
-class MyAllocator 
-{
-public:
+struct MyAllocator {
     using value_type = T; //needed by std::set
     T* allocate(std::size_t n) {
         std::cout << "Allocating: " << n * sizeof(T) << " bytes"<<std::endl;
         return static_cast<T*>(::operator new(n * sizeof(T)));
     }
-    void deallocate(T* p, std::size_t n) {
-        ::operator delete(p);//TODO: is this correct ? 
+    void deallocate(T* p, std::size_t /*n*/) { // n is not needed
+        ::operator delete(p);
     }
 };
 int main() {
@@ -208,22 +227,29 @@ Deallocating
 Deallocating
 ```
 ---
-ex1.cpp
+# exercises
+exercises/containers/ex1.cpp
+
+Set-up an alloctor to avoid allocating in the hot path.
 
 ---
 ## Data locality
 - Decrease time complexity, increase space complexity
 - Increased space complexity could reduce performance due to decreased data locality.
-- Pocality std::vector > locality std::set
-- Pointer chasing is really bad
+- Locality std::vector > locality std::set
+- Pointer chasing is really bad for performance
 
 ---
+## Hardware and speed
 - Register
-- Cache (L1<L3)
+- Cache (L1>L3)
 - Ram
 - Flash
 
+Typically want data that is used together to be in cache.
+
 ---
+## False sharing
 - Data is transferred from memory to cache in blocksize = cache line
 - Cache lines are invalidated on data write
 - L1 cache lines are typically not shared between cores
@@ -233,6 +259,7 @@ william@vbox:~$ getconf LEVEL1_DCACHE_LINESIZE
 64
 ```
 ---
+## False sharing
 ```cpp
 uint8_t[64] _cacheLine;
 ```
@@ -241,8 +268,9 @@ uint8_t[64] _cacheLine;
 - Cache line constantly invalidated, constantly reshared between cores,
 CPU does not know which byte in cache line is invalidated, it only knows that block of bytes needs to be synced
 ----
+## False sharing
 - Avoid false sharing by allocating on cache line boundary
-- Aligning memory can be done by using alignas
+- Aligning memory can be done by using alignas (C++11)
 ```cpp
 int main()
 {
@@ -282,18 +310,15 @@ struct L2
     uint64_t sourceMacAddress;
     uint64_t destinationMacAddress;
 };
-
 int main() 
 {
     const size_t packetCount = 100;
     std::array<L2, packetCount> stream;
-
     for (int i = 0; i < packetCount; ++i) {
         if (stream[i].sourcePort == 123) {
             stream[i].sourcePort = 0;
         }
     }
-
     return 0;
 }
 ```
@@ -301,16 +326,14 @@ int main()
 ## Structure of arrays
 ```cpp
 
-struct Stream 
-{
+struct Stream {
     std::vector<uint16_t> sourcePort;
     std::vector<uint16_t> destinationPort;
     std::vector<uint64_t> sourceMacAddress;
     std::vector<uint64_t> destinationMacAddress;
 };
 
-int main() 
-{
+int main() {
     const size_t packetCount = 100;
     Stream stream;
     for (int i = 0; i < packetCount; ++i) {
@@ -324,13 +347,18 @@ int main()
 ---
 ## Optimizations
 - Profile your code
-- Change layout of data members
 - Measure cache misses in hot path: cachegrind
-- Avoid allocating in hot path
-- Manage algorithmic complexity
+	1. Change layout of data members
+	2. Avoid allocating in hot path
+	3. Manage algorithmic complexity
 ---
-# Containers
-## Algorithms
+# exercises
+exercises/containers/ex2.cpp
+
+Try-out and fix false sharing on your setup
+
+---
+## Algorithms of the core library
 - Make code more expressive: raises the level of abstraction
 - Avoid common mistakes; empty containers, too complex
 - Rely on tested algorithms used by many developers
@@ -340,19 +368,15 @@ int main()
 - No memory overhead, retrieval of the maximum or minimum(depending on heap configuration) element with O(1) complexity
 - Unlike RB-trees, not possible to find random elements using O(log n) complexity. Inserting an element is O(log n) complex.
 ---
-## Heaps
-- The main property of this tree is that child nodes are smaller than parent nodes.
-//TODO Image here
 
----
 ```cpp
 void print(auto container)
 {
-    for(auto const& e:container)
-    {
+    for(auto const& e:container) {
         std::cout << e<< ' ';
     }
-    std::cout << 	std::boolalpha<<std::is_heap(std::begin(container), 	std::end(container)) <<std::endl;
+    std::cout <<std::boolalpha<< 
+		std::is_heap(std::begin(container), std::end(container)) <<std::endl;
 }
 int main()
 {
@@ -465,7 +489,6 @@ int main()
     int total_value = std::reduce(std::begin(values), std::end(values));
     std::cout << "Total equity value: "<< total_value << std::endl;
 
-
     int total_value_2 = std::transform_reduce(std::begin(equities), std::end(equities), 0, 
         std::plus<>(), [](auto e){return e.value;});
 
@@ -575,3 +598,11 @@ void print(T begin, T end)
     }
 }
 ```
+---
+# exercises
+exercises/containers/ex3.cpp
+...
+exercises/containers/ex9.cpp
+
+---
+<!-- _class: final-slide -->

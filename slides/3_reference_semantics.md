@@ -2,8 +2,11 @@
 marp: true
 theme: slide-theme
 ---
+<!-- _class: first-slide -->
+---
 # C++ Training
 ## Reference semantics
+<!-- _class: second-slide -->
 ---
 # Ownership
 - Resource management. Owner of a resource
@@ -15,7 +18,7 @@ std::string x = "some string";
 ```
 ---
 # std::string
-- Automatic storage variable manages a heap allocation
+- Automatic storage variable 'x' manages a heap allocation
 - When destructed, the memory used to store the text data is released.
 - Owns the memory
 -- Owns the lock
@@ -61,7 +64,7 @@ int main()
 }
 ```
 ---
-# Ownership transfer < C++11
+## Ownership transfer < C++11
 ```cpp
 int main()
 {
@@ -76,6 +79,7 @@ int main()
     std::cout << "s2 " << s2 << std::endl;
 }
 ```
+---
 ```cpp
 Program returned: 0
 s.data() 0xbfd2b0
@@ -86,6 +90,7 @@ s
 S2 123456789… (truncated)
 ```
 ---
+## Expressing ownership through API
 ```cpp
 class PDF
 {
@@ -97,7 +102,7 @@ class PDF
 - How to indicate that the PDF class takes ownership of title’s data?
 - Convention is not compiler enforced.
 ---
-## Move semantics; moving ownership
+## Move semantics - example
 ```cpp
 struct Blob
 {
@@ -128,6 +133,9 @@ int main(){
     storage.find(path)->second.print();
     return 1;
 }
+---
+0x7ffe8a0efa90 0x1fac2b0 size: 1000
+0x1fadae0 0x1fad6b0 size: 1000
 ```
 ---
 ## Move semantics: What problem ?
@@ -149,12 +157,13 @@ void print() const
 ```
 ---
 ## That problem !
-- Ownership – who frees the allocated memory?
+- Ownership – who frees the allocated memory? Should it be freed?
+- Need to read implementation/documentation
+- Definition should enforce contract between caller and callee
 - A Pointer-type becomes semantically meaningless
 - Memory fragmentation
 ---
-# std::move
-## c++11 
+## std::move - c++11  
 ```cpp
 int main(){
     std::multimap<std::string, Blob> storage;
@@ -207,10 +216,10 @@ Program stdout
 0x8bdeb0 0 size: 1000
 ```
 ---
-## Temporary that has been moved from
-- Valid destructible state
-- What is possible -> implementation defined.
-- Works on GCC, might crash on msvc
+## C++ standard: moved from resource
+1. **Valid** destructible state
+2. What is possible -> implementation defined.
+3. Advice: only assume instance can be destructed. 
 ---
 ## std::move
 - std::move unconditionally casts input to a movable reference
@@ -226,12 +235,19 @@ std::remove_reference_t<T>&& move(T &&t) noexcept
 }
 ```
 ---
-## do image here
----
-## do image here
----
-## Compiler moves
-    Thou shalt move only when it is unquestionably safe to do so
+## Different types of references
+l-value reference, r-value reference, x-values reference
+```
+    ______ ______
+   /      X      \
+  /      / \      \
+ |   l  | x |  pr  |
+  \      \ /      /
+   \______X______/
+       gl    r
+```
+Compiler shall move only when it is unquestionably safe to do so
+
 ---
 ## Special member functions
 - Move constructor
@@ -276,11 +292,16 @@ int main()
     Blob b2(b);
     Blob b3(std::move(b));    
 }
+---
+lvalue ctor
+rvalue ctor
 ```
 Converts lvalue ‘b’ to xvalue(rvalue). Allowing compiler to call rvalue constructor when creating b3.
+
 ---
 ```cpp
-struct X {
+struct X
+{
     X(std::size_t capacity){
          std::cout << "ctor" << std::endl;       
          _container.reserve(capacity);
@@ -312,7 +333,7 @@ int main()
     X b(std::move(v));
 }
 ---
-ctor
+ctor // RVO
 copy ctor
 move ctor
 ```
@@ -347,8 +368,10 @@ if no copy assignment, constructor or destructor is defined by user
 - Note: =default and =delete count as user defined
 ---
 ## Exercises
-move_semantics/ex1.cpp
-move_semantics/ex2.cpp
+reference_semantics/ex1.cpp
+reference_semantics/ex2.cpp
+
+exercises on move semantics/avoiding copies
 
 ---
 # Move semantics
@@ -435,7 +458,7 @@ unique_ptr<A> make_unique(A&& && arg)
 }
 ```
 ---
-## Forwarding constructor and specialization
+## Overloading a forwarding constructor
 ```cpp
 struct A 
 {
@@ -448,7 +471,7 @@ A a2(str);               // calls ctor (2)
                          // because the argument is NOT const
 ```
 ---
-## Forwarding constructor and specialization
+## Overloading a forwarding constructor
 ```cpp
 struct A 
 {
@@ -460,7 +483,7 @@ A a3(a2);    // calls ctor (2)
              // because the argument is NOT const
              // and the default generated copy ctor accepts a “const A&”
 ```
-**Guideline**: Do not specialize templated constructors
+**Guideline**: Do not overload templated constructors
 
 ---
 ## Overloading
@@ -578,7 +601,7 @@ struct A
 };
 ```
 ---
-## Invalid move if T is l-value
+Invalid move if T is l-value
 ```cpp
 struct A
 {
@@ -591,6 +614,7 @@ struct A
 };
 ```
 ---
+## Whats wrong here?
 ```cpp
 template<typename T>
 struct A
@@ -617,15 +641,13 @@ struct A
 ```
 ---
 ## exercises
-```cpp
-move_semantics/ex3.cpp
-move_semantics/ex4.cpp
-move_semantics/ex6.cpp
-```
+reference_semantics/ex3.cpp
+reference_semantics/ex4.cpp
+
+exercises on universal references
+
 ---
 # Move semantics
-## Library support
----
 ## Library support
 - std::unique_ptr
 - std::shared_ptr
@@ -635,14 +657,7 @@ move_semantics/ex6.cpp
 - Expresses single ownership
 - Own the pointer or own the resource
 - RAII (memory allocation, sockets, files, …)
-- NOT only memory, can provide custom destructor to deal with other types of resources.
----
-## std::shared_ptr
-- Expresses shared ownership
-- Multiple owners of a resource, either strong or weak ownership.
-
----
-TODO: example here. callback with weak_ptr to some object in guy who invokes CB and shared_ptr in owning obj
+- NOT limited to memory, can provide custom destructor to deal with other types of resources.
 
 ---
 ## Strategy pattern
@@ -779,6 +794,73 @@ lambda. size: 8
 lambda. size: 8
 ```
 ---
+## std::shared_ptr
+1. Expresses shared ownership
+2. Multiple owners of a resource
+3. Reference counted
+4. Either strong(std::shared_ptr) or weak ownership (std::weak_ptr)
+5. Extra allocation, reference counter is MT safe
+---
+```cpp
+class CallbackBase 
+{
+public:
+    virtual void invoke() = 0;
+    virtual ~CallbackBase() = default;
+};
+class CallbackManager {
+public:
+    void addCallback(std::weak_ptr<CallbackBase> callback) {
+        callbacks.push_back(callback);
+    }
+
+    void invokeCallbacks() {
+        auto it = callbacks.begin();
+        while (it != callbacks.end()) {
+            if (auto locked = it->lock()) {
+                locked->invoke();  // Invoke the callback
+                ++it;              // Move to the next callback
+            } else {
+                 std::cout << "Callback erased" << std::endl;
+                it = callbacks.erase(it);  // Remove expired weak_ptr
+            }
+        }
+    }
+private:
+    std::vector<std::weak_ptr<CallbackBase>> callbacks;
+};
+```
+---
+```cpp
+class MyCallback : public CallbackBase, public std::enable_shared_from_this<MyCallback> {
+public:
+    void invoke() override {
+        std::cout << "Callback invoked!" << std::endl;
+    }
+    void registerCallback(CallbackManager& manager) {
+        manager.addCallback(shared_from_this());
+    }
+};
+int main() {
+    CallbackManager manager;
+    {
+        auto callback1 = std::make_shared<MyCallback>();
+        callback1->registerCallback(manager);
+        auto callback2 = std::make_shared<MyCallback>();
+        callback2->registerCallback(manager);
+        manager.invokeCallbacks();
+    }
+    manager.invokeCallbacks();
+    return 0;
+}
+---
+Program returned: 0
+Callback invoked!
+Callback invoked!
+Callback erased
+Callback erased
+```
+---
 ## Move semantics
 - Save time and space by avoiding allocations and expensive copies
 - Expressing ownership – resource is being passed around
@@ -786,8 +868,8 @@ lambda. size: 8
 ## Elliding pointers
 - Pointers can be expensive. chasing pointers. fragmentation. allocations.
 - Common pointer avoiding techniques:
--- Empty base optimization
--- Empty string optimization
+  1. Empty base optimization
+  2. Empty string optimization
 ---
 ## Empty base optimization
 - Hijack some member variable to instantiate a strategy/inject a policy.
@@ -903,16 +985,13 @@ union
 ---
 ## Which constructor do I use?
 - Move / copy constructor, most optimal
-- Often I only do copy ctor
+- Often you will see code like this:
 ```cpp
-#include "mystring.h"
-struct X
-{
+struct X {
     X(MyString const& s):_s(s){}
     MyString _s;
 };
-int main()
-{
+int main() {
     MyString b("this is the tale of tony montana");
     X x2(std::move(b));
 }
@@ -947,5 +1026,11 @@ deallocate 0x2034eb0
 - Justifiable
 
 ---
-move_semantics/ex5.cpp
+
+## exercises
+reference_semantics/ex5.cpp
+
+Implement std::unique_ptr optionally with EBO
+
 ---
+<!-- _class: final-slide -->

@@ -2,12 +2,16 @@
 marp: true
 theme: slide-theme
 ---
+<!-- _class: first-slide -->
+---
 # C++ Training
-## Value semantics
+## Value types
+<!-- _class: second-slide -->
 ---
 ## Pass by value
 - Copies state of object
 - Independent mutable state
+- Simplifies thinking about MT
 ```cpp
 void do_something(std::vector<int>)
 ```
@@ -52,29 +56,31 @@ Ctor
 void do_something(int*, int size)
 ```
 ---
-- Value semantics are preferred, language is evolving in this direction.
-- Nr of bugs, ownership and concurrency have a strong correlation.
-- Internal inheritance (e.g. vtable) requires reference semantics out of necessity. value semantics would slice base object.
+## Value semantics
+- Value semantics reduce complexity, language has core support for value semantics.
+- Nr of bugs, ownership and concurrency are correlated.
+- Core language legacy: Internal inheritance (e.g. vtable).
 ---
 ## Library support
-- std::variant: closed type, open operation set polymorphism, single dispatch unlike typical double dispatch visitor implementations
-- std::optional
-- std::expected
+- std::variant<T1, T2>: closed type, open operation set polymorphism, single dispatch unlike typical double dispatch visitor implementations
+- std::optional<T>
+- std::expected<V, E>
 - std::any: void* with runtime safety
+- ...
 ---
+## std::variant
 ```cpp
 #include <iostream>
 #include <variant>
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 using VariantType = std::variant<int, std::string>;
-std::string get(VariantType v){
+std::string get(VariantType v) {
     return std::visit(overloaded {
         [](int arg) { return std::to_string(arg); },
-        [](const std::string& arg) { return arg;},
+        [](std::string const& arg) { return arg;},
     }, v);
 }
-int main(){
-
+int main() {
     VariantType v = {"dro"};
     std::cout<<get(v)<<std::endl;
     v={10};
@@ -88,23 +94,78 @@ int main(){
 -- std::vector O(N) copies vs O(1) copies when using reference semantics
 -- Move semantics, copy elision reduces overhead. 
 - Copy on write
--- Shared mutable state accessible from distinct contexts complicates the concurrency model. When should the shared object be deconstructed?
----
-exercises/value_semantics/ex1.cpp
-exercises/value_semantics/ex2.cpp
-exercises/value_semantics/ex3.cpp
+-- Shared mutable state accessible from distinct contexts complicates the concurrency model. When should the shared object be destructed?
 
 ---
-# value semantics
-## Polymorphism and value types
+## Internal inheritance
+How does inheritance work?
+```cpp
+struct C {
+  virtual ~C(){}
+  virtual do_something() {}
+}
+struct B : C {
+  virtual ~B(){}
+  virtual do_something() override {}
+}
+struct A : B {
+  virtual ~A(){}
+  do_something() override {}
+}
+```
 ---
-## Slicing
+## vptr - mental model
+```
+Class A Object Layout:
++-------------------+
+|      vptr         | --> Points to A's VTable
++-------------------+
+| C's members       |
++-------------------+
+| B's members       |
++-------------------+
+| A's members       |
++-------------------+
+Class B Object Layout:
++-------------------+
+|      vptr         | --> Points to B's VTable
++-------------------+
+| C's members       |
++-------------------+
+| B's members       |
++-------------------+
+Class C Object Layout:
++-------------------+
+|      vptr         | --> Points to C's VTable
++-------------------+
+| C's members       |
++-------------------+
+```
+---
+## vtable - mental model
+VTable for Class A
+```
++----------------------------------+
+| [0] Pointer to A::~A()           | --> A's Destructor
++----------------------------------+
+| [1] Pointer to A::do_something() | --> A's do_something()
++----------------------------------+
+```
+---
+## Polymorphism
 - Slicing occurs when vtable info is lost
 ```cpp
 Base& a = get_some_reference();
 Base b = a;
 ```
+- Create a new instance b of type B. vtable pointer is not copied.
 - Slicing hinders the combination of value semantics and classic inheritance
+---
+# exercises
+exercises/value_semantics/ex1.cpp
+
+Exercise that demos issues with internal inheritance and value semantics.
+
 ---
 ## Value semantics for class hierarchy
 Expressive, not loaded with c++ technicalities like references pointers etc.
@@ -112,10 +173,10 @@ Expressive, not loaded with c++ technicalities like references pointers etc.
 Derived a;
 Base &b = a;
 auto c = b;
-std::vector<Base> v;
-v.emplace_pack(Derived1());
-v.emplace_pack(Derived2());
-v.emplace_pack(Derived3());
+std::vector<Base> v; //value type Base
+v.emplace_pack(a);
+v.emplace_pack(b);
+v.emplace_pack(c);
 ```
 ---
 ## Goal
@@ -145,7 +206,8 @@ struct Vtable
   void (*destroy)(void *ptr);
 };
 ```
-- holds function pointers that can operate on objects without knowing their concrete types at compile time
+Vtable stores function pointers that can operate on objects without knowing the concrete type at compile time
+
 ---
 ```cpp
 template <class Concrete>
@@ -208,3 +270,13 @@ struct Cat
 - Cleanup class hierarchy
 - Template cleanup
 - ...
+---
+# exercises
+exercises/value_semantics/ex2.cpp
+external inheritance
+
+exercises/value_semantics/ex3.cpp
+implement std::any
+
+---
+<!-- _class: final-slide -->

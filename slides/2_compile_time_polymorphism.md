@@ -2,29 +2,32 @@
 marp: true
 theme: slide-theme
 ---
+<!-- _class: first-slide -->
+---
 # C++ Training
 ## Compile-time polymorphism
+<!-- _class: second-slide -->
 ---
 # What is Compile-Time Polymorphism?
 
 - Compile-time type erasure
-- **Templates**
 - Avoid code duplication
 - Meta-programming; type inspection
+- **Templates**
 ---
-# Key features
+## Key features
 - C++99/03
     - Class/Function templates
     - Template specialization
-- C++11 -> C++17 era
+- C++11/14/17 era
     - Variable templates
     - Auto keyword
-    - if constexpr
+    - constexpr
     - SFINAE
 - C++20
     - Concepts
 ---
-# Function template
+## Function template
 ```cpp
 template <typename T>
 T add(T const& a, T const& b) 
@@ -37,19 +40,35 @@ int main()
     double res = add(5.5, 2.3); // 5.5 is double
 }
 ```
-- Does not promote or demote the built-in type. No casting
+Does not promote or demote the built-in type. No casting
+
 ---
-# Class template
+## Function template
 ```cpp
-template <typename T, int N>
-class Array 
+template <typename T>
+T add(T const& a, T const& b) 
 {
-public:
-    T data[N];
-    T& operator[](int index)
+    return a + b;
+}
+int main() 
+{
+    /*???*/ res = add(5, 2.3);
+}
+```
+**Question** : What will type T be deduced to?
+
+---
+## Class template
+```cpp
+template <typename T, std::size_t SIZE>
+struct Array 
+{
+    T& operator[](std::size_t index)
     {
         return data[index]; 
     }
+private:
+    T data[SIZE];
 };
 
 int main() 
@@ -58,11 +77,26 @@ int main()
     Array<double, 5> dblArray;
 }
 ```
-- Size of the array is part of type.
+Size of the array is part of type, std::array in c++11
+
 ---
-# Function template specialization
+## Partial class template specialization
 ```cpp
-#include <iostream>
+template <std::size_t SIZE>
+struct Array<BigType, SIZE>
+{
+    BigType& operator[](std::size_t index)
+    {
+        return data[index]; 
+    }
+private:
+    Store<SIZE> data;
+};
+```
+
+---
+## Function template overloading
+```cpp
 template <typename T, typename S>
 void print(T const& value, S& stream)
 {
@@ -79,10 +113,58 @@ int main()
     print("combust", std::cout);
 }
 ```
-What is the output of the print statements?
+**Question**: What is the output of both print statements?
 
 ---
-# C++20 - auto keyword 1/2
+## Full Function template specialization
+```cpp
+template <typename T, typename S>
+void print(T const& value, S& stream)
+{
+    stream << "Value: " << value << std::endl;
+}
+template <>
+void print<std::string, std::ostream>(std::string const& value, std::ostream& stream)
+{
+    stream << "std::string specialization: " << value << std::endl;
+}
+int main()
+{
+    print(123, std::cout);
+    print("combust", std::cout);
+}
+```
+Partial template specialization for functions is not possible in C++.
+Generally, overload iso specialize functions.
+
+---
+## Primary function template with partial class specialization 
+```cpp
+template<typename T, typename U>
+class Operation {
+public:
+    static void perform(T value, U extra) {
+        std::cout << "Generic operation with type T and U: " << value << ", " << extra << '\n';
+    }
+};
+
+// Partial specialization for when the first parameter is a pointer
+template<typename U>
+class Operation<int*, U> {
+public:
+    static void perform(int* value, U extra) {
+        std::cout << "Operation for pointer to int. Value: " << *value << ", Extra: " << extra << '\n';
+    }
+};
+
+// Function template that dispatches to the Operation class
+template<typename T, typename U>
+void executeOperation(T value, U extra) {
+    Operation<T, U>::perform(value, extra);
+}
+```
+---
+## C++20 - auto keyword 1/2
 ```cpp
 auto /*C++14 auto*/ add(auto const& a, auto const& b /*C++20 auto*/)
 {
@@ -101,7 +183,7 @@ int main()
 Same issue as previous slide
 
 ---
-# C++20 - auto keyword 2/2
+## C++20 - auto keyword 2/2
 ```cpp
 #include <iostream>
 auto add(auto const& a, auto const& b) 
@@ -114,16 +196,16 @@ int main()
     std::cout << typeid(result).name() << std::endl;
 }
 ```
-What is the type of 'result'? Type of a and b is deduced independently.
+What is the type of 'result'? types of a and b are deduced independently.
 
 ---
-# Variable templates
-## C++14
+## Variable templates -  C++14
+
 ```cpp
 template<class T>
 constexpr T pi = T(3.1415926535897932385L);
 template<class T>
-T circular_area(T r) {
+T circularArea(T r) {
     return pi<T> * r * r;
 }
 ```
@@ -137,24 +219,30 @@ struct PI {
 PI<T>::value
 ```
 ---
+## exercises
+exercises/compile_time_polymorphism/ex1.cpp
 
-# SFINAE
-## Substitution Failure Is Not An Error
-- Create a set of all possible candidates includes non-specialized
-- Substitute type
-- No compilation error, if substitution fails
-- Remove candidates from overload resolution set
+Exercise on template specialization and overloading
+
 ---
 # SFINAE
-## Overload resolution set
+## Substitution Failure Is Not An Error
+1. Create a set of all possible candidates including non-specialized
+2. Substitute type
+3. No compilation error, if substitution fails
+4. Remove entry from candidate set, if substitution fails
+---
+## Candidate set
 ```cpp
 template <typename T, typename Stream>
-auto print(T const& value, Stream& stream) {
+auto print(T const& value, Stream& stream)
+{
     stream << "std::string specialization: " << value << std::endl;
     return std::begin(value);
 }
 template <typename Stream>
-void print(double value, Stream& stream) {
+void print(double value, Stream& stream)
+{
     stream << "Value: " << value << std::endl;
 }
 int main() {
@@ -164,7 +252,7 @@ int main() {
 ```
 ---
 ## Overload resolution set
-Removed primary candiate from set. This compiles.
+Remove primary candiate from set. This compiles.
 ```cpp
 template <typename T, typename Stream>
 auto print(T const& value, Stream& stream) -> T::iterator
@@ -183,6 +271,7 @@ void print(double value, Stream& stream)
 - SFINAE only works in the 'immediate' context.
 - Generally, think arguments and return type.
 - Body of a function is NOT the immediate context.
+
 Fails to compile - no SFINAE:
 ```cpp
 template <typename T, typename Stream>
@@ -194,29 +283,28 @@ auto print(T const& value, Stream& stream)
 }
 ```
 ---
-# SFINAE
-## standard library
+## std::enable_if - C++11
 ```cpp
 namespace std 
 {
-    //Primary template for enable_if, does not contain type T
+    //Primary template for enable_if, does NOT wrap type T
     template<bool B, class T = void>
     struct enable_if {};
-    //Specialization for B==True, does encapsulate type T.
+    //Specialization for B==True, does wrap type T.
     template<class T>
     struct enable_if<true, T> { typedef T type; };   
 }
 ```
 ---
-# SFINAE
 ## std::enable_if example
 ```cpp
-template <typename T, typename Enable = typename std::enable_if<!std::is_integral<T>::value>::type>
-void print(const T& value) {
+template <typename T, typename Enable = typename std::enable_if_t<!std::is_integral<T>::value>>
+void print(T const& value)
+{
     std::cout << "Primary template: " << value << std::endl;
 }
 template <typename T>
-typename std::enable_if<std::is_integral<T>::value>::type print(const T& value) {
+typename std::enable_if_t<std::is_integral<T>::value> print(T const& value) {
     std::cout << "Integral value: " << value << std::endl;
 }
 ```
@@ -224,7 +312,6 @@ typename std::enable_if<std::is_integral<T>::value>::type print(const T& value) 
 **::value** static const member -> value is known at compile time.
 
 ---
-# SFINAE 
 ## Compiler errors
 Assume there is no primary candidate implementation
 ```cpp
@@ -244,11 +331,9 @@ Assume there is no primary candidate implementation
       |
 
 ```
-
 ---
-# SFINAE
-## Custom compiler errors on primary candidate
-Assume more than 1 specialization, but for slide reasons there is only 1 specialization.
+## Custom compiler errors
+Assume multiple print implementations
 ```cpp
 template <typename T, typename = typename std::enable_if<!std::is_integral<T>::value>::type>
 void print(T const& value) 
@@ -263,8 +348,7 @@ typename std::enable_if_t<std::is_integral<T>::value> print(T const& value)
 }
 ```
 ---
-# constexpr
-## C++ 17
+## constexpr -  C++ 17
 ```cpp
 template <typename T>
 void print(T const& value) 
@@ -280,9 +364,8 @@ void print(T const& value)
 }
 ```
 ---
-# constexpr
-## decltype
-But what if you are using 'auto' and do not have a type 'T'?
+## constexpr - decltype
+But what if you are using 'auto' and do not know type 'T'?
 ```cpp
 void print(auto const& value) 
 {
@@ -318,8 +401,11 @@ void print(T const& value)
       |     ^
 ```
 ---
-# Concepts
-## C++20
+## exercises
+exercises/compile_time_polymorphism/ex2.cpp
+
+---
+## Concepts - C++20
 ```cpp
 #include <concepts>
 template <typename T>
@@ -358,7 +444,6 @@ Assume there is no primary candidate implementation
 
 ```
 ---
-# Concepts
 ## Custom concepts
 ```cpp
 template <typename T>
@@ -367,16 +452,15 @@ void print(T const& value) requires requires(T a) {  std::cout << a }
     std::cout << "Value: " << value << std::endl;
 }
 ```
-requires clause
-requires expression
+requires clause + requires expression
 also works with auto
+compile-time!
 
 ---
-# Concepts
 ## Combination of requires and predicate
 ```cpp
 template <typename T>
-void calculate_sum(T const& a, T const& b) requires (std::is_arithmetic_v<T> && requires(T x, T y) { 
+void calculate_sum(T const& a, T const& b) requires (std::is_arithmetic_v<T> || requires(T x, T y) { 
     x + y; 
 }) 
 {
@@ -384,7 +468,6 @@ void calculate_sum(T const& a, T const& b) requires (std::is_arithmetic_v<T> && 
 }
 ```
 ---
-# Concepts
 ## Constrained class template
 ```cpp
 template <typename T>
@@ -400,3 +483,9 @@ private:
     T m_value;
 };
 ```
+---
+## exercises
+exercises/compile_time_polymorphism/ex3.cpp
+
+---
+<!-- _class: final-slide -->
