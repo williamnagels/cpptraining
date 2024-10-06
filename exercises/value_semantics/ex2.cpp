@@ -8,6 +8,7 @@ struct Vehicle
 // TODO: Add l-value and r-value copy constructors.
 // TODO: Add a templated constructor for specific use cases.
 // TODO: Add a destructor that cleans up the vtable member by destroying the concrete instance.
+// TODO: Add vtable member variables
 };
 
 //The classes Car and Bus should not be changed for these excercises. Only vehicle has to be changed.

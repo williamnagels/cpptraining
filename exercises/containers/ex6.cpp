@@ -40,8 +40,12 @@ void test_2()
     //iterators will copy construct/assign and are no good right now.
 
     //TODO: uncomment the asserts below
-    /*ASSERT(concat == "somereallyactuallyreallyreallyreallylongstring");
-    ASSERT(v[0] == "some");
+    //ASSERT(concat == "somereallyactuallyreallyreallyreallylongstring");
+
+    // Note: the following assertions may fail depending on your compiler
+    // and standard library implementation, because the state of v after
+    // the move is implementation-defined
+    /*ASSERT(v[0] == "some");
     ASSERT(v[1] == "");*/
     
     //TODO: Is moving the std::string instances into 'concat' more expensive than copying?

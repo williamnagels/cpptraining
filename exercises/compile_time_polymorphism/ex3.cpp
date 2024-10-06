@@ -12,7 +12,7 @@ concept LargeType =
 */
 //TODO: Constrain this compress overload so that it is only used for small types.
 template <typename T>
-bool compress(T const& obj)
+bool compress(T const& /*obj*/)
 {
   //Imagine some compressing algorithm that works well on small types
   return true;
@@ -22,7 +22,7 @@ bool compress(T const& obj)
 //These types are OK and should not updated.
 struct Small 
 {
-    char b;
+    char data;
 };
 
 struct Large
@@ -39,8 +39,8 @@ on the size of type T.
 */
 void test_1()
 {
-  Small small;
-  Large large;
+  Small small = {};
+  Large large = {};
   ASSERT(compress(small) == true);
   //TODO: uncomment the assert below afer the SmallObject and LargeType concepts have been defined
   //and the overloaded compress function has been provided.

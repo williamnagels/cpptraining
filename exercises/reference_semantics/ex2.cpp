@@ -50,12 +50,13 @@ replaced by moves.
 */
 void test_1()
 {
+  //TODO: Object1 instances are constructed and copied into v. Fix this. Avoid the copy/move.
   std::vector<Object1> v;
   for (uint64_t i = 1; i <= 10; ++i)
   {
     v.push_back(Object1(i));
   }
-  //TODO: split has to be check for redundant copies aswell
+  //TODO: split has to be checked for redundant copies/moves.
   auto value = split(v);
 
   // These prints might help you debug:

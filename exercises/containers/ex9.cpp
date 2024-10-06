@@ -15,7 +15,9 @@ void test_1()
     //TODO: Uncomment the assert
     //ASSERT(*it == "bananaman");
     
-    //TODO: Write the full vector to the standard output using std::ostream_iterator
+    //TODO: Copy the contents of it to the standard output using std::ostream_iterator
+    //expected result is to see 'bananaman' printed on the stdout.
+    //std::copy(it, ...)
 }
 }
 

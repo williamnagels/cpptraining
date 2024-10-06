@@ -25,14 +25,13 @@ std::find_if takes a functor as argument, increase numberOfComparisons each time
 */
 void test_2()
 {
-  std::vector<int> v = {4, 3, 6, 2, 9, 8,10};
-  int numberOfComparisons = 0;
-
-  //TODO: Complete the arguments of std::find_if to take some functor that counts the number of comparisons.
-  //auto it = std::find_if(v.begin(), v.end(), ...);
-  //TODO: uncomment the asserts below when the custom functor has been implemented.
-  //ASSERT(*it == 10);
-  //ASSERT(numberOfComparisons == std::size(v)); //linear scaling
+  std::vector<int> v = {4, 3, 6, 2, 9, 8, 10};
+  std::size_t numberOfComparisons = 0;
+  //auto comparator =//
+  auto it = v.begin(); //linear search for integer with value 10 using custom comperator
+  //TODO: uncomment asserts when the linear search has been implemented.
+  //ASSERT(*it == 10); 
+  //ASSERT(numberOfComparisons == std::size(v));
 }
 
 /*
@@ -44,16 +43,12 @@ technique to count the number of comparisons as used in the previous excerise.
 */
 void test_3()
 {
-  std::vector<int> v = {4, 3, 6, 2, 9, 8,10};
-  int numberOfComparisons = 0;
-  //TODO: Look for the number 10 using a binary search algorithm in container 'v' 
-  //and increase 'numberOfComparisons' everytime a comparison is done.
-  //auto it =
-  //TODO uncomment asserts when the binary search algorithm has been implemented
-  /*
-  ASSERT(*it == 10);
-  ASSERT(numberOfComparisons== 4);
-  */
+  std::vector<int> v = {4, 3, 6, 2, 9, 8, 10};
+  std::size_t numberOfComparisons = 0;
+  bool found = true; //binary search for integer with value 10 using custom comperator
+  ASSERT(found);
+  //TODO: uncomment assert when the binary search has been implemented.
+  //ASSERT(numberOfComparisons == std::ceil(std::log2(v.size()) + 1));
 }
 }
 

@@ -1,5 +1,5 @@
 #include <global.h>
-
+using namespace std::chrono_literals;
 namespace
 {
 // GOAL: Get familiar with the std::chrono libraries of the standard library.
@@ -12,19 +12,13 @@ void test_1()
   // Replace `int64_t` with a new type `Duration60kHz` to ensure uniform precision.
   // Duration60kHz represents a duration of 1/60000 of a second.
   // using Duration60kHz = std::chrono::duration<...>;
-  int64_t time2sec = 2 * 60000;
-  int64_t time100ms = 100 * 60;
+  int64_t time2sec = 2 * 60000; // create Duration60kHz with literal
+  int64_t time100ms = 100 * 60; // create Duration60kHz with literal
   int count = 10;
   int64_t total = (time2sec + time100ms) * count;
   ASSERT(total == 1260000);
 }
 
-// GOAL: Gain familiarity with the std::chrono library in the standard library.
-// std::chrono also supports time points, which represent specific moments in time, unlike durations.
-// An example of a time point could be a timestamp when a log entry was added to a log file.
-// The task is to update the function below to measure the execution time of std::accumulate 
-// in 60kHz ticks (1/60000th of a second).
-// TODO: Define a time point type, Time60kHzUtc, representing UTC time in 1/60000th of a second.
 void test_2()
 {
   // TODO: Implement a function 'now' that returns the current UTC time as a 60kHz time point.
@@ -48,10 +42,12 @@ void test_3()
 {
   // TODO: Change the type of the contained elements in container lap_times.
   // lap_times contains durations in milliseconds. There is a type in the standard that expresses exactly that.
-  std::vector<uint64_t> lap_times{400, 356, 402, 397, 402, 386};
-  // TODO: Change the type of total_sec to a duration in seconds
+  std::vector<uint64_t> lap_times_in_millis{400, 356, 402, 397, 402, 386};
+  // TODO: Change the type of total_sec to the total duration in seconds
+  // the only rounding to seconds precision should happen on the end result
+  // Q: can you deduce the type of total_sec based on the type of elements in lap_times without explicitly specifying the duration type ?
   uint64_t total_sec = 0;
-  for (auto i : lap_times)
+  for (auto i : lap_times_in_millis)
     //TODO: Fix the math
     total_sec += i / 1000;
   //TODO: When the TODOs above are fixed, the print should be correct.

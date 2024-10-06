@@ -43,6 +43,7 @@ void test_1()
     //TODO: Uncomment these asserts
     //ASSERT(std::distance(std::begin(friends), it) == 2);
     //ASSERT(std::distance(it, std::end(friends)) == 4);
+    //ASSERT(it->name == "Bob"); 
 }
 
 }

@@ -22,6 +22,7 @@ Object builder(const std::string &v)
 }
 
 /* GOAL: Make the builder function work with types that support move semantics.
+ * Right now, the function builder only works on l-values.
  * Either provide a move overload for the 'builder' function or use a universal reference.
  * The Object class should not be modified.
  */

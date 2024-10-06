@@ -17,6 +17,11 @@ void* operator new(std::size_t size) noexcept(false) {
     return ptr;
 }
 
+void operator delete(void* ptr, std::size_t) noexcept {
+    ++deallocationCount;
+    std::free(ptr);
+    std::cout << "HEAP deallocating " << std::endl;
+}
 void operator delete(void* ptr) noexcept {
     ++deallocationCount;
     std::free(ptr);
@@ -75,8 +80,8 @@ void doTest()
     }
 }
 
-//GOAL: The goal of this excercise is to demonstrate some methods to avoid unnecessary resource allocation penalties. 
-//By default, using std::list will trigger 20 allocations, but this can be reduced to 11 with a pool allocator. 
+//GOAL: The goal of this excercise is to demonstrate some methods to avoid unnecessary resource allocations. 
+//By default, using std::list will cause 20 allocations, but this can be reduced to 11 with a pool allocator. 
 //Further optimization can bring the number of allocations down to 10, as the maximum required allocations are known in advance.
 void test_1()
 {

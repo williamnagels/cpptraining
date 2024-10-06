@@ -13,17 +13,22 @@ struct Object_1
 
 /* GOAL: Get familiar with move semantics by adding a move constructor to the Object_1 class.
  * Add runtime asserts to verify that the move constructor is invoked.
- * An ASSERT macro is provided by global.h. Take a look at test_2 for assert demo and inspiration on how to use it.
  * TIP: a moved from std::string is empty.
  */
 void test_1()
 {
-  //TODO: Uncomment these lines when the move constructor is implemented
+  //TODO: Uncomment these lines when the std::string move constructor is implemented
   /*
   std::string str = "obj";
   Object_1 o(std::move(str)); 
   */
   //TODO: Add assert to verify that move constructor is invoked.
+
+  //TODO: Uncomment these lines when the Object_1 move constructor is implemented
+  /*
+  Object_1 o2 = std::move(o);
+  ASSERT(...)
+  */
 }
 
 /* GOAL: Get familiar with move semantics by add a move assignment operator to the 

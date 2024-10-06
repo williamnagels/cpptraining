@@ -16,12 +16,13 @@ class SafePtr
  *
  * TODO: Add the following to the "SafePtr" class:
  *   - A public constructor that accepts a pointer to an object of type T.
- *   - A private member with type an unmanaged pointer of type T*. Assign the value received into the constructor to this pointer.
+ *   - A private unmanaged pointer member of type T*. Assign the value received into the constructor to this pointer.
  *   - A default constructor that initializes the private member pointer of type T* with nullptr.
  *   - A destructor that deletes the unmanaged pointer of type T*.
  *   - A dereference operator that dereferences the unmanaged member pointer of type T* and returns a reference of type T&.
  *   - A get function that returns the unmanaged pointer of type T*.
  *   - A boolean test operator that checks the unmanaged member pointer of type T* is not a nullptr.
+ *   - Move assignment operator and move constructor, that constructs a SafePtr<T> from an other SafePtr<T>
  */
 void move_ex5()
 {
@@ -58,6 +59,7 @@ void move_ex5()
   // ASSERT(*p7 == 8);
   // ASSERT(p8.get() == nullptr);
 
-  // TODO: Bonus challenge: Make the deallocator for SafePtr used to release the unmanaged pointer of type T*, 
-  // customizable without increasing the size of SafePtr when using the default provided deallocator.
+  // TODO: Bonus challenge: Allow the deallocator for SafePtr to be customizable without increasing its size. 
+  // The destructor should use std::default_delete by default, but it should also support a custom deleter if one is provided.
+  // ASSERT(sizeof(p7) == sizeof(int*));
 }

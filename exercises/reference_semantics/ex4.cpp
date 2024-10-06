@@ -16,7 +16,8 @@ struct Object
 /*
 GOAL: Fix the constructor in class Object<T> so that the commented assert in 'test_1' compiles.
 TIP: the constructor of 'Object' must accept l-value and r-value references. Either make 2 overloads or use
-universal references.
+universal references. Remove the constructor from the overload set if the type passed in the constructor is not equal to T.
+The type passed in the constructor may be qualified with const or reference.
 */
 void test_1()
 {

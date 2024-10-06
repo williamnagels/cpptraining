@@ -1,7 +1,7 @@
 #include <global.h>
 namespace
 {
-//align memory on cache line to avoid false sharing
+//TODO: align memory on cache line to avoid false sharing
 int t1_value;
 int t2_value;
 
@@ -18,7 +18,8 @@ void updateArray2()
         t2_value += i;
     }
 }
-
+//GOAL: The goal of this excercise is to notice the effect of false sharing and how
+//the physical hardware constraints can impact the way you write software in the hot path.
 void test_1()
 {
     auto start = std::chrono::high_resolution_clock::now();

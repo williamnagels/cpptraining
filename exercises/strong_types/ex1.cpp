@@ -4,7 +4,7 @@ namespace
 // Define the Command struct
 struct Command
 {
-    //TODO: create a templated constructor which takes one argument 'input' that is only part of overload resolution
+    //TODO: create a universal constructor which takes one argument 'input' that is only part of overload resolution
     //when 'input' can be used to construct an std::string. Throw a readable compiler error in 
     //all other cases. Initialize m_command with the value of 'input'. call setMayPrintArguments in the body of this constructor.
 
