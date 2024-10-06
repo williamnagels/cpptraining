@@ -24,7 +24,7 @@ struct A
 
 //GOAL: The goal of this exercise is to realize the difference between template specialization initalization
 //and substitution. Fix the has_encrypt partial specialization so that it properly detects
-//any encrypt method on type C. Why is the specialization not selected? Surely it should be
+//any encrypt method on type T. Why is the specialization not selected? Surely it should be
 //since class A has an encrypt method and there is an has_encrypt that is more specialized
 void test_1()
 {
