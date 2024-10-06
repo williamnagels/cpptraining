@@ -348,7 +348,73 @@ typename std::enable_if_t<std::is_integral<T>::value> print(T const& value)
 }
 ```
 ---
-## constexpr -  C++ 17
+## std::void_t - C++17
+```cpp
+template< class... >
+using void_t = void;
+```
+- will reduce to void if substitution succeeds
+- will remove candidate from set if substitution fails.
+
+---
+## std::void_t - example
+```cpp
+template <typename, typename = std::void_t<>>
+struct has_type_member : std::false_type {};
+template <typename T>
+struct has_type_member<T, std::void_t<typename T::type>> : std::true_type {};
+struct WithType {
+    using type = int;
+};
+struct WithoutType {};
+
+template <typename T>
+constexpr bool has_type_member_v = has_type_member<T>::value;
+int main() {
+    std::cout << std::boolalpha << "WithType has type member: " << has_type_member_v<WithType> << '\n';
+    std::cout << "WithoutType has type member: " << has_type_member_v<WithoutType> << '\n';
+}
+---
+WithType has type member: true
+WithoutType has type member: false
+```
+---
+## std::void_t expected output
+```cpp
+#include <iostream>
+#include <type_traits>
+template <typename, typename = int>
+struct has_type_member : std::false_type {};
+template <typename T>
+struct has_type_member<T, std::void_t<typename T::type>> : std::true_type {};
+struct WithType {
+    using type = int;
+};
+struct WithoutType {};
+template <typename T>
+constexpr bool has_type_member_v = has_type_member<T>::value;
+int main() {
+    std::cout << std::boolalpha << "WithType has type member: " << has_type_member_v<WithType> << '\n';
+    std::cout << "WithoutType has type member: " << has_type_member_v<WithoutType> << '\n';
+}
+---
+WithType has type member: false
+WithoutType has type member: false
+```
+---
+## std:declval - C++11
+```cpp
+template <typename T>
+auto call_example() -> decltype(std::declval<T>().example(), void()) {
+    std::cout << "T has example() method\n";
+}
+```
+Instantiate type, even if no constructor available
+comma operator do not use result of .example()
+decltype(...expression...)
+
+---
+## constexpr -  C++17
 ```cpp
 template <typename T>
 void print(T const& value) 
