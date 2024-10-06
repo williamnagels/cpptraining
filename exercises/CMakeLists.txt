@@ -14,28 +14,28 @@ add_executable(compile_time_polymorphism ${COMMON_SOURCES} ${COMPILE_TIME_POLYMO
 target_compile_options(compile_time_polymorphism PRIVATE -Wall -Wextra -Wpedantic)
 
 set(MOVE_SOURCES 
-	referencesemantics/main.cpp 
-	referencesemantics/ex1.cpp 
-	referencesemantics/ex2.cpp 
-	referencesemantics/ex3.cpp
-	referencesemantics/ex4.cpp
-	referencesemantics/ex5.cpp)
+	reference_semantics/main.cpp 
+	reference_semantics/ex1.cpp 
+	reference_semantics/ex2.cpp 
+	reference_semantics/ex3.cpp
+	reference_semantics/ex4.cpp
+	reference_semantics/ex5.cpp)
 add_executable(reference ${COMMON_SOURCES} ${MOVE_SOURCES})
 target_compile_options(reference PRIVATE -Wall -Wextra -Wpedantic)
 
 set(VALUE_SOURCES 
-	valuesemantics/main.cpp 
-	valuesemantics/ex1.cpp 
-	valuesemantics/ex2.cpp 
-	valuesemantics/ex3.cpp)
+	value_semantics/main.cpp 
+	value_semantics/ex1.cpp 
+	value_semantics/ex2.cpp 
+	value_semantics/ex3.cpp)
 add_executable(value ${COMMON_SOURCES} ${VALUE_SOURCES})
 target_compile_options(value PRIVATE -Wall -Wextra -Wpedantic)
 
 set(STRONG_SOURCES 
-	strongtypes/main.cpp 
-	strongtypes/ex1.cpp
-	strongtypes/ex2.cpp
-	strongtypes/ex3.cpp)
+	strong_types/main.cpp 
+	strong_types/ex1.cpp
+	strong_types/ex2.cpp
+	strong_types/ex3.cpp)
 add_executable(strong ${COMMON_SOURCES} ${STRONG_SOURCES})
 target_compile_options(strong PRIVATE -Wall -Wextra -Wpedantic)
 

@@ -46,82 +46,8 @@ void test_1()
   //and the overloaded compress function has been provided.
   //ASSERT(compress(large) == false);
 }
-//The type TrivialType and NonTrivialType should not be changed.
-struct WithDestructor
-{
-    int x;
-    float y;
-};
-struct WithoutDestructor
-{
-  WithDestructor t;
-  ~WithoutDestructor() { }
-}
-// Concept to ensure only trivially copyable types are allowed
-template<typename T>
-concept TriviallyCopyable = //TODO:detect that the type is trivial here.
-
-// Concept to ensure only non-trivially copyable types are allowed
-template<typename T>
-concept NonTriviallyCopyable = !TriviallyCopyable<T>;
-
-// Primary container for non-trivially copyable types
-template <NonTriviallyCopyable T>
-class Container {
-public:
-    // Constructor
-    Container() = default;
-
-    // Destructor: no need for special handling; std::vector will handle it
-    ~Container() = default;
-
-    // Method to add an item
-    void add(const T& item) {
-        data_.push_back(item); // std::vector handles copying
-    }
-
-private:
-    std::vector<T> data_; // Use std::vector for storage
-};
-
-// Specialization for trivially copyable types
-template <TriviallyCopyable T>
-class Container {
-public:
-    // Constructor
-    Container(T* storage, std::size_t capacity)
-        : data_(storage), capacity_(capacity), size_(0) {}
-
-    // Destructor: do not call destructors for trivially copyable types
-    ~Container() {
-        // No action needed
-    }
-
-    // Method to add an item
-    void add(const T& item) {
-        if (size_ < capacity_) {
-            // Use memcpy to add the item (no constructor or destructor invoked)
-            std::memcpy(&data_[size_], &item, sizeof(T));
-            ++size_; // Increment the size counter
-        } else {
-            throw std::overflow_error("Container capacity exceeded");
-        }
-    }
-
-private:
-    T* data_;           // Pointer to the storage
-    std::size_t capacity_; // Total capacity of the storage
-    std::size_t size_;     // Current size (number of elements added)
-};
-/* GOAL: 
-*/
-void test_2()
-{
-
-  
 }
 void ct_poly_ex3()
 {
   test_1();
-  test_2();
 }
