@@ -3,7 +3,7 @@ The instructions in this README file assume that a variable has been defined tha
 ```
 ROOT_CPPTRAINING=/home/william/cpptraining
 ```
-## Compile the test binaries:
+## Native Compile the test binaries:
 ### Generate Makefiles
 ```
 cmake -B $ROOT_CPPTRAINING/build/ -S $ROOT_CPPTRAINING/exercises/
@@ -41,7 +41,12 @@ By default CMake will generate UNIX makefiles but with Ninja, it is possible to 
 ninja -C $ROOT_CPPTRAINING/build -t clean value
 ```
 In this example, value represents the specific sub-project or target you wish to clean.
-
+## Docker container
+You can use all native build commands, but they should be executed inside the Docker container. The following command will create a build folder in $ROOT_CPPTRAINING. This folder will be volume-mounted to the Docker container, with the native build directory mapped to /build within the container, which serves as the build destination for CMake.
+```
+mkdir $ROOT_CPPTRAINING/build
+docker run --rm -v $ROOT_CPPTRAINING:/source -v $ROOT_CPPTRAINING/build:/build cpptraining /bin/sh -c "cmake -B /build -S /source ; cmake --build /build"
+```
 ## Solving the exercises
 1. Navigate to the folder of the module you're interested in (e.g., containers). Open the corresponding exercise file, such as containers/ex1.cpp, to start with the first exercise.
 2. Look for the symbol test_1 within that file and read the associated documentation. The instructions should clarify what needs to be done. Each test file (e.g. containers/ex1.cpp) will typically contain several local symbols like test_1, test_2, etc., and one global symbol, such as cont_ex1. This global symbol is called by the test binary. You can see the global symbols needed to build each binary in the main.cpp file in each submodule.
