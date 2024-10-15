@@ -1,12 +1,14 @@
 # Exercises
+
+## Build status
+
+compilertest and exercises build status: ![Build Status](https://github.com/williamnagels/modern-cpp/actions/workflows/build-in-docker.yaml)
+
+## Native Compile the test binaries:
 The instructions in this README file assume that a variable has been defined that stores the C++ Training clone destination folder, as shown below:
 ```
 ROOT_CPPTRAINING=/home/william/cpptraining
 ```
-## Build status
-- compilertest/exercises build status: ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/williamnagels/cpptraining/build-in-docker?label=build)
-
-## Native Compile the test binaries:
 ### Generate Makefiles
 ```
 cmake -B $ROOT_CPPTRAINING/build/ -S $ROOT_CPPTRAINING/exercises/
