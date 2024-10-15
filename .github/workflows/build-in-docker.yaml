@@ -32,11 +32,11 @@ jobs:
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/workspace \
-            trainingcontainer /bin/bash -c "cd /workspace/exercises/extra/compilertest && mkdir -p build && cd build && cmake .. && make"
+            trainingcontainer /bin/sh -c  "cd /workspace/exercises/extra/compilertest && mkdir -p build && cd build && cmake .. && make"
 
       # Step 5: Build CMake Project in exercises/
       - name: Build CMake Project - exercises
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/workspace \
-            trainingcontainer /bin/bash -c "cd /workspace/exercises && mkdir -p build && cd build && cmake .. && make"
+            trainingcontainer /bin/sh -c "cd /workspace/exercises && mkdir -p build && cd build && cmake .. && make"
