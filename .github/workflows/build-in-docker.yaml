@@ -1,6 +1,6 @@
 # .github/workflows/build.yml
 
-name: Build and Test
+name: Docker build
 
 # Trigger the workflow on push or pull request events to the main branch
 on:
