@@ -3,6 +3,7 @@
 ## Build status
 
 compilertest and exercises build status: ![Build Status](https://github.com/williamnagels/modern-cpp/actions/workflows/build-in-docker.yaml/badge.svg)
+The GitHub workflow build-in-docker.yaml builds the Docker container located in extra/compilertest. It then uses the containerized compiler to build both the CMake project in the exercises folder (this folder) and the compilertest project within the extra/compilertest directory.
 
 ## Native Compile the test binaries:
 The instructions in this README file assume that a variable has been defined that stores the C++ Training clone destination folder, as shown below:
