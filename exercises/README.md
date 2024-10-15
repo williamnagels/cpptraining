@@ -4,7 +4,7 @@ The instructions in this README file assume that a variable has been defined tha
 ROOT_CPPTRAINING=/home/william/cpptraining
 ```
 ## Build status
-- compilertest/exercises build status: ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/williamnagels/cpptraining/build-exercises?label=build)
+- compilertest/exercises build status: ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/williamnagels/cpptraining/build-in-docker?label=build)
 
 ## Native Compile the test binaries:
 ### Generate Makefiles
